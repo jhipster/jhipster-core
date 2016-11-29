@@ -7,9 +7,13 @@ entity Department {
  * JobHistory comment.
  */
 entity JobHistory {
-  startDate ZonedDateTime,
+  /** startDate javadoc comment above the field description. */
+  startDate ZonedDateTime, /** startDate inline javadoc comment. */
+  /**
+   * endDate javadoc comment in separate line.
+   */
   endDate ZonedDateTime,
-  language Language
+  language Language /** language inline javadoc comment */
 }
 
 enum Language {
