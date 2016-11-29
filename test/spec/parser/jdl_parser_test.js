@@ -76,9 +76,20 @@ describe('JDLParser', function () {
             name: 'JobHistory',
             tableName: 'JobHistory',
             fields: {
-              startDate: new JDLField({name: 'startDate', type: FieldTypes.ZONED_DATE_TIME}),
-              endDate: new JDLField({name: 'endDate', type: FieldTypes.ZONED_DATE_TIME}),
-              language: new JDLField({name: 'language', type: 'Language'})
+              startDate: new JDLField({
+                name: 'startDate',
+                type: FieldTypes.ZONED_DATE_TIME,
+                comment: 'startDate javadoc comment above the field description.\nstartDate inline javadoc comment.'
+              }),
+              endDate: new JDLField({
+                name: 'endDate',
+                type: FieldTypes.ZONED_DATE_TIME,
+                comment: 'endDate javadoc comment in separate line.'
+              }),
+              language: new JDLField({
+                name: 'language',
+                type: 'Language',
+                comment: 'language inline javadoc comment'})
             },
             comment: 'JobHistory comment.'
           }));

@@ -97,16 +97,19 @@ describe('::exportToJSON', function () {
         expect(jobHistory.fields).to.deep.eq([
           {
             "fieldName": "startDate",
-            "fieldType": "ZonedDateTime"
+            "fieldType": "ZonedDateTime",
+            "javadoc": "startDate javadoc comment above the field description.\nstartDate inline javadoc comment."
           },
           {
             "fieldName": "endDate",
-            "fieldType": "ZonedDateTime"
+            "fieldType": "ZonedDateTime",
+            "javadoc": "endDate javadoc comment in separate line."
           },
           {
             "fieldName": "language",
             "fieldType": "Language",
-            "fieldValues": "FRENCH,ENGLISH,SPANISH"
+            "fieldValues": "FRENCH,ENGLISH,SPANISH",
+            "javadoc": "language inline javadoc comment"
           }
         ]);
         expect(jobHistory.dto).to.eq('no');
