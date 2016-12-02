@@ -272,6 +272,7 @@ describe('JDLParser', function () {
           expect(content.entities.A.fields.name.comment).to.eq('abc');
           expect(content.entities.A.fields.thing.comment).to.eq('def');
           expect(content.entities.A.fields.another.comment).to.eq('ghi');
+          expect(content.entities.A.fields.requiredField.comment).to.eq('validated field inline comment');
         });
         describe('when having both forms of comments', function() {
           it('only accepts the one defined first', function() {
@@ -282,6 +283,12 @@ describe('JDLParser', function () {
           it('assigns the comment to the next field', function() {
             expect(content.entities.C.fields.name.comment).to.be.undefined;
             expect(content.entities.C.fields.thing.comment).to.eq('abc');
+          });
+        });
+        describe('when using comments above the field', function() {
+          it('assigns the comment to this field', function() {
+            expect(content.entities.D.fields.firstField.comment).to.eq('First field comment');
+            expect(content.entities.D.fields.secondField.comment).to.eq('Second field comment');
           });
         });
       });

@@ -92,11 +92,13 @@ entityBody
   / "" {return [];}
 
 fieldDeclList
-  = JDLComment? space* com:Comment? space* JDLComment? space* f:FIELDNAME space t:type space* vl:validationList? space* com2:Comment? space* ","? space* JDLComment? space* fdl:fieldDeclList {return concat([{"name" : f, "type" : t, "validations" : vl, "javadoc": com||com2}], fdl );}
+  = JDLComment? space* com:Comment? space* JDLComment? space* f:FIELDNAME space t:type spaceOrTab com2:Comment space* ","? space* JDLComment? space* fdl:fieldDeclList {return concat([{"name" : f, "type" : t, "validations" : [], "javadoc": com||com2}], fdl );} // not validated field inline javadoc at the end
+  / JDLComment? space* com:Comment? space* JDLComment? space* f:FIELDNAME space t:type space* vl:validationList spaceOrTab com2:Comment? space* ","? space* JDLComment? space* fdl:fieldDeclList {return concat([{"name" : f, "type" : t, "validations" : vl, "javadoc": com||com2}], fdl );} // validated field inline javadoc at the end
+  / JDLComment? space* com:Comment? space* JDLComment? space* f:FIELDNAME space t:type space* vl:validationList? space* ","? space* JDLComment? space* fdl:fieldDeclList {return concat([{"name" : f, "type" : t, "validations" : vl, "javadoc": com}], fdl );} // no inline javadoc at the end
   / "" {return [];}
 
 validationList
-  = v:validation space* vl:validationList {return concat([v], vl);}
+  = space* v:validation vl:validationList {return concat([v], vl);}
   / "" {return [];}
 
 //Relationship
@@ -293,6 +295,9 @@ FIELDNAME "a field name"
 
 space "a space"
   = space:['\n'|'\t'|'\r'|' '|\u2028|\u2029]+
+
+spaceOrTab
+  = spaceOrTab:['\t'|' ']+
 
 /******************               COMMENT                 ***********************/
 Comment

@@ -2,6 +2,7 @@ entity A {
   name String              /** abc */
   thing Integer /** def */
   another Double /*ghi*/
+  requiredField Integer required /** validated field inline comment */
 }
 
 entity B {
@@ -11,4 +12,11 @@ entity B {
 entity C {
   name String,             /** abc */
   thing Integer
+}
+
+entity D {
+  /** First field comment */
+  firstField String
+  /** Second field comment */
+  secondField String
 }
