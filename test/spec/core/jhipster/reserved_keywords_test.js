@@ -40,6 +40,15 @@ describe('ReservedKeywords', function () {
         expect(isReserved('DOCUMENT', 'MONGODB')).to.be.true;
       });
     });
+    describe('when passing an invalid angular keyword', function () {
+      it('returns true', function () {
+        expect(isReserved('CLASS', 'ANGULAR')).to.be.true;
+        expect(isReserved('NODENAME', 'ANGULAR')).to.be.true;
+        expect(isReserved('NODETYPE', 'ANGULAR')).to.be.true;
+        expect(isReserved('TEXT', 'ANGULAR')).to.be.true;
+        expect(isReserved('TYPE', 'ANGULAR')).to.be.true;
+      });
+    });
   });
   describe('::isReservedClassName', function () {
     describe('when passing a valid entity name', function () {
