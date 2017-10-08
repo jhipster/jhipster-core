@@ -51,4 +51,36 @@ describe('Chevrotain Lexer POC', () => {
     expect(lexResult.tokens).to.have.lengthOf(9,
       'All 9 tokens should have been lexed even thought "@@@" caused a syntax error');
   });
+
+
+  it('Can lex a simple JDL with freeStyle "path line"', () => {
+    // invalid token but the lexing should continue
+    const input = `
+      application {
+        config {
+          path ../../toto!!!
+          languages en, fr
+        }
+    }`;
+    const lexResult = JDLLexer.tokenize(input);
+    const errors = lexResult.errors;
+    expect(errors).to.have.lengthOf(0);
+
+    const tokens = lexResult.tokens;
+    expect(tokens.length).to.equal(12);
+    expect(tokens[0].image).to.equal('application');
+    expect(tokens[1].image).to.equal('{');
+    expect(tokens[2].image).to.equal('config');
+    expect(tokens[3].image).to.equal('{');
+    expect(tokens[4].image).to.equal('path');
+    // our "free style line is here".
+    expect(tokens[5].image).to.equal('../../toto!!!');
+    // and the lexer switched back to the regular lexing mode.
+    expect(tokens[6].image).to.equal('languages');
+    expect(tokens[7].image).to.equal('en');
+    expect(tokens[8].image).to.equal(',');
+    expect(tokens[9].image).to.equal('fr');
+    expect(tokens[10].image).to.equal('}');
+    expect(tokens[11].image).to.equal('}');
+  });
 });
