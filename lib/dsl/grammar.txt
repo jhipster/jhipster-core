@@ -357,7 +357,7 @@ validation
   / MAX SPACE* '(' SPACE* int:INTEGER SPACE* ')' { return { key: 'max', value: int };}
   / MAX SPACE* '(' SPACE* constantName:CONSTANT_NAME SPACE* ')' { return { key: 'max', value: constantName, constant: true }; }
   / PATTERN SPACE* '(' SPACE* FORWARD_SLASH regex:REGEX FORWARD_SLASH SPACE* ')' { return { key: 'pattern', value: regex }; }
-  / PRIMARYKEY { return { key: 'primarykey', value: '' }; }
+  / PRIMARYKEY { return { key: 'primary key', value: '' }; }
 
 // Comments
 comment = commentStart notAComment:notAComment* commentStop { return notAComment.join(''); }
@@ -399,7 +399,7 @@ MAXBYTES = 'maxbytes'
 MAX = 'max'
 MIN = 'min'
 PATTERN = 'pattern'
-PRIMARYKEY = 'primarykey'
+PRIMARYKEY = 'primary key'
 
 REGEX = pattern:[^\n\r/]* { return pattern.join(''); }
 
