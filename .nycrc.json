@@ -3,6 +3,7 @@
   "check-coverage": true,
   "exclude": [
     "lib/dsl/pegjs_parser.js",
+    "lib/dsl/poc/**/*.js",
     "test/**/*.js"
   ],
   "reporter": [

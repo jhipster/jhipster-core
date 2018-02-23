@@ -306,6 +306,10 @@ check-error@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
 
+chevrotain@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/chevrotain/-/chevrotain-3.0.1.tgz#4259e8ea707273e88b8d70c9f1e3fe108d9c2446"
+
 circular-json@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.1.tgz#be8b36aefccde8b3ca7aa2d6afc07a37242c0d2d"
