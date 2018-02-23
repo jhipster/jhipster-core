@@ -25,7 +25,7 @@ describe('ChevrotainParser', () => {
           // We can now explore the automatically created Concrete Syntax Tree.
           // See detailed CST docs here: https://github.com/SAP/chevrotain/blob/master/docs/concrete_syntax_tree.md
           expect(cst.name).to.equal('prog');
-          expect(cst.children.constantDeclaration).to.be.empty;
+          expect(cst.children.constantDeclaration).to.be.undefined;
           expect(cst.children.entityDeclaration).to.have.lengthOf(1);
           expect(cst.children.entityDeclaration[0].children.NAME[0].image).to.equal('JobHistory');
           // ...

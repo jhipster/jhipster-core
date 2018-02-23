@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2017 the original author or authors from the JHipster project.
+ * Copyright 2013-2018 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -68,6 +68,16 @@ describe('JDLField', () => {
         expect(field.validations).to.deep.eq(args.validations);
       });
     });
+    describe('when passing a reserved keyword as name', () => {
+      it('fails', () => {
+        try {
+          new JDLField({ name: 'class', type: 'String' });
+          fail();
+        } catch (error) {
+          expect(error.name).to.eq('IllegalNameException');
+        }
+      });
+    });
   });
   describe('::isValid', () => {
     describe('when checking the validity of an invalid object', () => {
@@ -85,6 +95,13 @@ describe('JDLField', () => {
       describe('without a type attribute', () => {
         it('returns false', () => {
           expect(JDLField.isValid({ name: 'myField' })).to.be.false;
+        });
+      });
+      describe('with a reserved keyword as name', () => {
+        it('returns false', () => {
+          expect(
+            JDLField.isValid({ name: 'class', type: 'String' })
+          ).to.be.false;
         });
       });
       describe('because its validations are invalid', () => {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2017 the original author or authors from the JHipster project.
+ * Copyright 2013-2018 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -70,8 +70,8 @@ describe('::parseFromDir', () => {
         expect(content.entities.Task).not.to.be.undefined;
         expect(content.entities.NoEntity).to.be.undefined;
         expect(content.entities.BadEntity).to.be.undefined;
-        expect(content.getOptions().filter(o => o.name === UnaryOptions.SKIP_CLIENT).length).eq(0);
-        expect(content.getOptions().filter(o => o.name === UnaryOptions.SKIP_SERVER).length).eq(0);
+        expect(content.getOptions().filter(o => o.name === UnaryOptions.SKIP_CLIENT).length).eq(1);
+        expect(content.getOptions().filter(o => o.name === UnaryOptions.SKIP_SERVER).length).eq(1);
       });
     });
   });

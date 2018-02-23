@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2017 the original author or authors from the JHipster project.
+ * Copyright 2013-2018 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -73,6 +73,16 @@ describe('JDLEntity', () => {
         expect(entity.fields).to.deep.eq(args.fields);
       });
     });
+    describe('when passing a reserved keyword as name', () => {
+      it('fails', () => {
+        try {
+          new JDLEntity({ name: 'class' });
+          fail();
+        } catch (error) {
+          expect(error.name).to.eq('IllegalNameException');
+        }
+      });
+    });
   });
   describe('::isValid', () => {
     describe('when checking the validity of an invalid object', () => {
@@ -86,6 +96,13 @@ describe('JDLEntity', () => {
         it('returns false', () => {
           expect(
             JDLEntity.isValid({ tableName: 'Something', fields: [] })
+          ).to.be.false;
+        });
+      });
+      describe('with a reserved keyword as name', () => {
+        it('returns false', () => {
+          expect(
+            JDLEntity.isValid({ name: 'class' })
           ).to.be.false;
         });
       });

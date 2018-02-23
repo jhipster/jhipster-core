@@ -1,6 +1,7 @@
 /**
- * This is the grammar we use to generate the parser jhGrammar.js.
- * We use the online tool at http://pegjs.org/online to write the parser.
+ * This the grammar we use to generate the parser jhGrammar.js.
+ * We use the online tool http://pegjs.org/online to generate the parser.
+ * Modifying this file won't affect the program, this is just to have a more readable grammar.
  */
 
 {
@@ -38,14 +39,7 @@
     }
   }
 
-  function addToApplicationDecl(passedApplicationDecl, key, value) {
-    let applicationDecl = passedApplicationDecl || {};
-    applicationDecl[key] = value;
-    return applicationDecl;
-  }
-
   const parsed = {
-    applications: [],
     constants: {},
     entities: [],
     relationships: [],
@@ -59,22 +53,16 @@
     noServer: { list: [], excluded: [] },
     filter: { list: [], excluded: [] },
     angularSuffix: {},
-    noFluentMethod: { list: [], excluded: [] }
+    noFluentMethod: { list: [], excluded: [] },
+    clientRootFolder: {}
   };
 }
 
-start = p:prog {
-    p.applications.reverse();
-    return p;
-  }
+start = p:prog { return p; }
 
 prog
   = SPACE* constantDecl:constantDecl SPACE* p:prog {
     parsed.constants[constantDecl.name] = constantDecl.value;
-    return parsed;
-  }
-  / SPACE* applicationDeclaration:applicationDecl SPACE* p:prog {
-    parsed.applications.push(applicationDeclaration);
     return parsed;
   }
   / SPACE* ed:entityDecl SPACE* p:prog {
@@ -130,155 +118,11 @@ prog
     parsed.filter = filter;
     return parsed;
   }
+  / SPACE* clientRootFolder:clientRootFolderDecl SPACE* p:prog {
+    parsed.clientRootFolder = clientRootFolder;
+    return parsed;
+  }
   / '' { return parsed; }
-
-// Application Declaration
-applicationDecl
-  = APPLICATION SPACE* '{' SPACE* applicationSubDecl:applicationSubDecl SPACE* '}' {
-    return applicationSubDecl;
-  }
-
-applicationSubDecl
-  = SPACE* CONFIG SPACE* '{' SPACE* applicationConfigDecl:applicationConfigDecl? SPACE* '}' SPACE* applicationSubDecl:applicationSubDecl {
-    applicationSubDecl.config = applicationConfigDecl || {};
-    return applicationSubDecl;
-  }
-  / SPACE* 'entities' SPACE* entityList:simpleEntityList SPACE* exclusion:exclusion? SPACE* applicationSubDecl:applicationSubDecl {
-    applicationSubDecl.entities = { entityList, exclusion };
-    return applicationSubDecl;
-  }
-  / '' { return { config: {} }; }
-
-applicationConfigDecl
-  = BASE_NAME SPACE* baseName:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'baseName', baseName.join(''));
-  }
-  / PATH SPACE* path:[^\n]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'path', path.join(''));
-  }
-  / PACKAGE_NAME SPACE* packageName:(([a-z]+'.')*[a-z]+) SPACE* applicationConfigDecl:applicationConfigDecl {
-    applicationConfigDecl = addToApplicationDecl(
-      applicationConfigDecl,
-      'packageName',
-      packageName.join('').replace(/,/g, '')
-    );
-    return addToApplicationDecl(
-      applicationConfigDecl,
-      'packageFolder',
-      applicationConfigDecl.packageName.replace(/[.]/g, '/')
-    );
-  }
-  / AUTHENTICATION_TYPE SPACE* authenticationType:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'authenticationType', authenticationType.join(''));
-  }
-  / HIBERNATE_CACHE SPACE* hibernateCache:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'hibernateCache', hibernateCache.join(''));
-  }
-  / CLUSTERED_HTTP_SESSION SPACE* clusteredHttpSession:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'clusteredHttpSession', clusteredHttpSession.join(''));
-  }
-  / WEBSOCKET SPACE* websocket:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'websocket', websocket.join(''));
-  }
-  / DATABASE_TYPE SPACE* databaseType:[a-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'databaseType', databaseType.join(''));
-  }
-  / DEV_DATABASE_TYPE SPACE* devDatabaseType:[A-z0-9]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'devDatabaseType', devDatabaseType.join(''));
-  }
-  / PROD_DATABASE_TYPE SPACE* prodDatabaseType:[A-z0-9]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'prodDatabaseType', prodDatabaseType.join(''));
-  }
-  / USE_COMPASS SPACE* useCompass:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'useCompass', useCompass);
-  }
-  / BUILD_TOOL SPACE* buildTool:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'buildTool', buildTool.join(''));
-  }
-  / SEARCH_ENGINE SPACE* searchEngine:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'searchEngine', searchEngine);
-  }
-  / ENABLE_TRANSLATION SPACE* enableTranslation:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'enableTranslation', enableTranslation);
-  }
-  / APPLICATION_TYPE SPACE* applicationType:[a-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'applicationType', applicationType.join(''));
-  }
-  / TEST_FRAMEWORK SPACE* testFrameworks:[a-z, ]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    const testFrameworkEntries = [];
-    const results = testFrameworks.join('').split(',');
-    for (let i = 0; i < results.length; i++) {
-      if (results[i].trim().length !== 0) {
-        testFrameworkEntries.push(results[i].trim());
-      }
-    }
-    return addToApplicationDecl(applicationConfigDecl, 'testFrameworks', testFrameworkEntries);
-  }
-  / LANGUAGES SPACE* languages:[a-z, ]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    const languageEntries = [];
-    const results = languages.join('').split(',');
-    for (let i = 0; i < results.length; i++) {
-      if (results[i].trim().length !== 0) {
-        languageEntries.push(results[i].trim());
-      }
-    }
-    return addToApplicationDecl(applicationConfigDecl, 'languages', languageEntries);
-  }
-  / SERVER_PORT SPACE* serverPort:[0-9]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-  	return addToApplicationDecl(applicationConfigDecl, 'serverPort', parseInt(serverPort.join(''), 10));
-  }
-  / ENABLE_SOCIAL_SIGN_IN SPACE* enableSocialSignIn:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'enableSocialSignIn', enableSocialSignIn);
-  }
-  / USE_SASS SPACE* useSass:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'useSass', useSass);
-  }
-  / JHI_PREFIX SPACE* jhiPrefix:[A-z0-9_-]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'jhiPrefix', jhiPrefix.join(''));
-  }
-  / MESSAGE_BROKER SPACE* messageBroker:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'messageBroker', messageBroker);
-  }
-  / SERVICE_DISCOVERY_TYPE SPACE* serviceDiscoveryType:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    const choice = serviceDiscoveryType.join('');
-    switch (choice) {
-    case 'true':
-      return addToApplicationDecl(applicationConfigDecl, 'serviceDiscoveryType', true);
-      break;
-    case 'false':
-      return addToApplicationDecl(applicationConfigDecl, 'serviceDiscoveryType', false);
-      break;
-    default:
-      return addToApplicationDecl(applicationConfigDecl, 'serviceDiscoveryType', choice.join(''));
-    }
-  }
-  / CLIENT_PACKAGE_MANAGER SPACE* clientPackageManager:[A-z]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'clientPackageManager', clientPackageManager.join(''));
-  }
-  / CLIENT_FRAMEWORK SPACE* clientFramework:[A-z0-9]+ SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'clientFramework', clientFramework.join(''));
-  }
-  / NATIVE_LANGUAGE SPACE* nativeLanguage:[a-z]+ applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'nativeLanguage', nativeLanguage.join(''));
-  }
-  / FRONT_END_BUILDER SPACE* frontEndBuilder:[A-z]+ applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'frontEndBuilder', frontEndBuilder.join(''));
-  }
-  / SKIP_USER_MANAGEMENT SPACE* skipUserManagement:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'skipUserManagement', skipUserManagement.join(''));
-  }
-  / SKIP_CLIENT SPACE* skipClient:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'skipClient', skipClient);
-  }
-  / SKIP_SERVER SPACE* skipServer:booleanChoice SPACE* applicationConfigDecl:applicationConfigDecl {
-    return addToApplicationDecl(applicationConfigDecl, 'skipServer', skipServer);
-  }
-  / comment SPACE* applicationConfigDecl:applicationConfigDecl { return applicationConfigDecl; }
-  / ''
-
-booleanChoice
-  = TRUE { return true; }
-  / FALSE { return false; }
 
 constantDecl
   = name:CONSTANT_NAME SPACE* '=' SPACE* value:INTEGER { return { name: name, value: value }; }
@@ -352,7 +196,7 @@ exclusionSub
 
 // noFluentMethod
 noFluentMethod
-  = NO_FLUENT_METHOD SPACE+ decl:subNoFluentMethod SPACE* ex:exclusion? SPACE*  {
+  = NO_FLUENT_METHOD SPACE+ decl:subNoFluentMethod SPACE* ex:exclusion? SPACE* {
     addUniqueElements(parsed.noFluentMethod.list, decl);
     if (ex) {
       addUniqueElements(parsed.noFluentMethod.excluded, ex);
@@ -368,7 +212,7 @@ subNoFluentMethod
 
 // DTO
 dtoDecl
-  = DTO SPACE+ decl:entityList SPACE* ex:exclusion? SPACE*  {
+  = DTO SPACE+ decl:entityList SPACE* ex:exclusion? SPACE* {
     parsed.dto[decl[decl.length - 1]] = parsed.dto[decl[decl.length - 1]] || { list: [], excluded: [] };
     addUniqueElements(parsed.dto[decl[decl.length - 1]].list, decl.slice(0, decl.length - 1));
     if (ex) {
@@ -379,7 +223,7 @@ dtoDecl
 
 // Pagination
 pagiDecl
-  = PAGINATE SPACE+ decl:entityList SPACE* ex:exclusion? SPACE*  {
+  = PAGINATE SPACE+ decl:entityList SPACE* ex:exclusion? SPACE* {
   	parsed.pagination[decl[decl.length - 1]] =
       parsed.pagination[decl[decl.length - 1]] || { list: [], excluded: [] };
     addUniqueElements(parsed.pagination[decl[decl.length - 1]].list, decl.slice(0, decl.length - 1));
@@ -391,7 +235,7 @@ pagiDecl
 
 // Service
 serviceDecl
-  = SERVICE SPACE+ decl:entityList SPACE* ex:exclusion? SPACE*  {
+  = SERVICE SPACE+ decl:entityList SPACE* ex:exclusion? SPACE* {
   	parsed.service[decl[decl.length - 1]] =
       parsed.service[decl[decl.length - 1]] || { list: [], excluded: [] };
     addUniqueElements(parsed.service[decl[decl.length - 1]].list, decl.slice(0, decl.length - 1));
@@ -403,7 +247,7 @@ serviceDecl
 
 // first way of declaring microservices
 microserviceDecl1
-  = MICROSERVICE SPACE+ decl:entityList SPACE* ex:exclusion? SPACE*  {
+  = MICROSERVICE SPACE+ decl:entityList SPACE* ex:exclusion? SPACE* {
     parsed.microservice[decl[decl.length - 1]] =
       parsed.microservice[decl[decl.length - 1]] || { list: [], excluded: [] };
     addUniqueElements(parsed.microservice[decl[decl.length - 1]].list, decl.slice(0, decl.length - 1));
@@ -415,7 +259,7 @@ microserviceDecl1
 
 // searchEngine
 searchEngineDecl
-  = SEARCH SPACE+ decl:entityList SPACE* ex:exclusion? SPACE*  {
+  = SEARCH SPACE+ decl:entityList SPACE* ex:exclusion? SPACE* {
     parsed.searchEngine[decl[decl.length - 1]] =
       parsed.searchEngine[decl[decl.length - 1]] || { list: [], excluded: [] };
     addUniqueElements(parsed.searchEngine[decl[decl.length - 1]].list, decl.slice(0, decl.length - 1));
@@ -427,7 +271,7 @@ searchEngineDecl
 
 // skipClient option
 noClientDecl
-  = SKIP_CLIENT SPACE+ decl:subNoClientDecl SPACE* ex:exclusion? SPACE*  {
+  = SKIP_CLIENT SPACE+ decl:subNoClientDecl SPACE* ex:exclusion? SPACE* {
     addUniqueElements(parsed.noClient.list, decl);
     if (ex) {
       addUniqueElements(parsed.noClient.excluded, ex);
@@ -444,7 +288,7 @@ subNoClientDecl
 
 // skipServer option
 noServerDecl
-  = SKIP_SERVER SPACE+ decl:subNoServerDecl SPACE* ex:exclusion? SPACE*  {
+  = SKIP_SERVER SPACE+ decl:subNoServerDecl SPACE* ex:exclusion? SPACE* {
     addUniqueElements(parsed.noServer.list, decl);
     if (ex) {
       addUniqueElements(parsed.noServer.excluded, ex);
@@ -460,7 +304,7 @@ subNoServerDecl
 
 // JPA Metamodel filter option
 filterDecl
-  = FILTER SPACE decl:subFilterDecl SPACE* ex:exclusion? SPACE*  {
+  = FILTER SPACE decl:subFilterDecl SPACE* ex:exclusion? SPACE* {
     addUniqueElements(parsed.filter.list, decl);
     if (ex) {
       addUniqueElements(parsed.filter.excluded, ex);
@@ -477,7 +321,7 @@ subFilterDecl
 
 // angularSuffix option
 angularSuffixDecl
-  = ANGULAR_SUFFIX SPACE* decl:entityList SPACE* ex:exclusion? SPACE*  {
+  = ANGULAR_SUFFIX SPACE* decl:entityList SPACE* ex:exclusion? SPACE* {
     parsed.angularSuffix[decl[decl.length - 1]] =
       parsed.angularSuffix[decl[decl.length - 1]] || { list: [], excluded: [] };
     addUniqueElements(parsed.angularSuffix[decl[decl.length - 1]].list, decl.slice(0, decl.length - 1));
@@ -487,6 +331,19 @@ angularSuffixDecl
     return parsed.angularSuffix;
   }
 
+
+// clientRootFolder option
+clientRootFolderDecl
+  = CLIENT_ROOT_FOLDER SPACE* decl:entityList SPACE* ex:exclusion? SPACE* {
+    parsed.clientRootFolder[decl[decl.length - 1]] =
+      parsed.clientRootFolder[decl[decl.length - 1]] || { list: [], excluded: [] };
+    addUniqueElements(parsed.clientRootFolder[decl[decl.length - 1]].list, decl.slice(0, decl.length - 1));
+    if (ex) {
+      addUniqueElements(parsed.clientRootFolder[decl[decl.length - 1]].excluded, ex);
+    }
+    return parsed.clientRootFolder;
+  }
+
 // common way to declare an entity list
 entityList
   = e:ENTITY_NAME SPACE* ',' SPACE* sub:entityList { return addUniqueElements([e], sub); }
@@ -494,11 +351,6 @@ entityList
   / ALL SPACE* WITH SPACE* method:([A-z0-9-]+) { return ['*', method.toString().replace(/,/g,'')]; }
   / e:ENTITY_NAME SPACE* WITH SPACE* method:([A-z0-9-]+) { return [e, method.toString().replace(/,/g,'')]; }
 
-simpleEntityList
-  = e:ENTITY_NAME SPACE* ',' SPACE* sub:simpleEntityList { return addUniqueElements([e], sub); }
-  / STAR SPACE* { return ['*']; }
-  / ALL SPACE* { return ['*']; }
-  / e:ENTITY_NAME SPACE* { return [e]; }
 
 relationshipType
 = ONE_TO_ONE { return 'one-to-one'; }
@@ -532,42 +384,6 @@ commentStop = [*]+ '/'
 notAComment = !commentStop !commentStart char:. { return char; }
 
 // Constants
-// Application constants
-APPLICATION = 'application'
-CONFIG = 'config'
-BASE_NAME = 'baseName'
-PATH = 'path'
-PACKAGE_NAME = 'packageName'
-AUTHENTICATION_TYPE = 'authenticationType'
-HIBERNATE_CACHE = 'hibernateCache'
-CLUSTERED_HTTP_SESSION = 'clusteredHttpSession'
-WEBSOCKET = 'websocket'
-DATABASE_TYPE = 'databaseType'
-DEV_DATABASE_TYPE = 'devDatabaseType'
-PROD_DATABASE_TYPE = 'prodDatabaseType'
-USE_COMPASS = 'useCompass'
-BUILD_TOOL = 'buildTool'
-SEARCH_ENGINE = 'searchEngine'
-ENABLE_TRANSLATION = 'enableTranslation'
-APPLICATION_TYPE = 'applicationType'
-TEST_FRAMEWORK = 'testFrameworks'
-LANGUAGES = 'languages'
-SERVER_PORT = 'serverPort'
-ENABLE_SOCIAL_SIGN_IN = 'enableSocialSignIn'
-USE_SASS = 'useSass'
-JHI_PREFIX = 'jhiPrefix'
-MESSAGE_BROKER = 'messageBroker'
-SERVICE_DISCOVERY_TYPE = 'serviceDiscoveryType'
-CLIENT_PACKAGE_MANAGER = 'clientPackageManager'
-CLIENT_FRAMEWORK = 'clientFramework'
-NATIVE_LANGUAGE = 'nativeLanguage'
-FRONT_END_BUILDER = 'frontendBuilder'
-SKIP_USER_MANAGEMENT = 'skipUserManagement'
-ENTITIES = 'entities'
-// skipClient & skipServer are already defined
-TRUE = 'true'
-FALSE = 'false'
-// Entity constants
 ENTITY = 'entity'
 RELATIONSHIP = 'relationship'
 ENUM = 'enum'
@@ -591,6 +407,7 @@ SKIP_CLIENT = 'skipClient'
 SKIP_SERVER = 'skipServer'
 ANGULAR_SUFFIX = 'angularSuffix'
 FILTER = 'filter'
+CLIENT_ROOT_FOLDER = 'clientRootFolder'
 // validations
 REQUIRED = 'required'
 MINLENGTH = 'minlength'

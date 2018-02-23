@@ -1,6 +1,6 @@
 {
   "name": "jhipster-core",
-  "version": "1.4.0",
+  "version": "1.4.6",
   "description": "JHipster's own domain language and core objects",
   "main": "module/index.js",
   "keywords": [
@@ -11,8 +11,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "yarn lint -- --fix",
-    "pretest": "yarn lint",
-    "test": "nyc mocha test",
+    "test": "yarn lint && nyc mocha test",
     "coverage": "nyc --reporter=text-summary report",
     "peg-parse": "pegjs -o lib/dsl/pegjs_parser.js lib/dsl/grammar.txt",
     "prepublish": "yarn peg-parse && yarn test",
@@ -41,19 +40,19 @@
     }
   ],
   "dependencies": {
-    "chevrotain": "0.33.0",
+    "chevrotain": "3.0.1",
     "lodash": "4.17.4",
     "winston": "2.4.0"
   },
   "devDependencies": {
     "chai": "4.1.2",
-    "eslint": "4.11.0",
+    "eslint": "4.16.0",
     "eslint-config-airbnb-base": "12.1.0",
-    "eslint-plugin-mocha": "4.11.0",
     "eslint-plugin-import": "2.8.0",
-    "nyc": "11.3.0",
-    "mocha": "4.0.1",
+    "eslint-plugin-mocha": "4.11.0",
+    "mocha": "5.0.0",
     "mocha-clean": "1.0.0",
+    "nyc": "11.4.1",
     "pegjs": "0.10.0"
   },
   "peerDependencies": {},
