@@ -34,9 +34,10 @@ describe('ReservedKeywords', () => {
       it('returns false', () => {
         expect(ReservedKeywords.isReserved('ValidKeyword', 'JHIPSTER')).to.be.false;
         expect(ReservedKeywords.isReserved('ACCOUNT', 'JAVA')).to.be.false;
+        expect(ReservedKeywords.isReserved('SUPER', 'KOTLIN')).to.be.false;
       });
     });
-    context('when passing an invalid jhipster keyword, no matter the case', () => {
+    context('when passing a valid jhipster keyword, no matter the case', () => {
       it('returns true', () => {
         expect(ReservedKeywords.isReserved('Account', 'JHIPSTER')).to.be.true;
         expect(ReservedKeywords.isReserved('account', 'jhipster')).to.be.true;
@@ -44,10 +45,11 @@ describe('ReservedKeywords', () => {
         expect(ReservedKeywords.isReserved('ACCOUNT', 'jhipster')).to.be.true;
       });
     });
-    context('when passing an invalid keyword for different types', () => {
+    context('when passing a valid keyword for different types', () => {
       it('returns true', () => {
         expect(ReservedKeywords.isReserved('ACCOUNT', 'jhipster')).to.be.true;
         expect(ReservedKeywords.isReserved('SUPER', 'JAVA')).to.be.true;
+        expect(ReservedKeywords.isReserved('FUN', 'KOTLIN')).to.be.true;
         expect(ReservedKeywords.isReserved('ACCESSIBLE', 'MYSQL')).to.be.true;
         expect(ReservedKeywords.isReserved('ANALYSE', 'POSTGRESQL')).to.be.true;
         expect(ReservedKeywords.isReserved('ADD', 'CASSANDRA')).to.be.true;
@@ -72,16 +74,17 @@ describe('ReservedKeywords', () => {
     });
   });
   describe('::isReservedFieldName', () => {
-    context('when passing a valid field name', () => {
+    context('when passing an invalid field name', () => {
       it('returns false', () => {
         expect(ReservedKeywords.isReservedFieldName('item')).to.be.false;
         expect(ReservedKeywords.isReservedFieldName('mySuperField')).to.be.false;
       });
     });
-    context('when passing an invalid field name', () => {
+    context('when passing a valid field name', () => {
       it('returns true', () => {
         expect(ReservedKeywords.isReservedFieldName('private')).to.be.true;
         expect(ReservedKeywords.isReservedFieldName('class')).to.be.true;
+        expect(ReservedKeywords.isReservedFieldName('fun')).to.be.true;
       });
     });
   });
