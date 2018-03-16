@@ -15,8 +15,9 @@
     "test:watch": "mocha test --watch --reporter min",
     "posttest": "yarn coverage",
     "coverage": "nyc --reporter=text-summary report",
-    "peg-parse": "pegjs -o lib/dsl/pegjs_parser.js lib/dsl/grammar.txt",
-    "prepublish": "yarn peg-parse && yarn test",
+    "peg-parse": "pegjs -o lib/dsl/old/pegjs_parser.js lib/dsl/old/grammar.txt",
+    "diagrams": "node ./scripts/serialize_grammar.js",
+    "prepublish": "yarn peg-parse && yarn test && yarn diagrams",
     "release": "git push && git push --tags && npm publish",
     "release-patch": "npm version patch -a -m \"Update to %s\" && yarn release",
     "release-minor": "npm version minor -a -m \"Update to %s\" && yarn release",
@@ -42,18 +43,19 @@
     }
   ],
   "dependencies": {
-    "lodash": "4.17.5",
-    "winston": "2.4.0"
+    "lodash": "4.17.4",
+    "winston": "2.4.0",
+    "chevrotain": "3.0.1"
   },
   "devDependencies": {
     "chai": "4.1.2",
     "eslint": "4.18.2",
     "eslint-config-airbnb-base": "12.1.0",
-    "eslint-plugin-mocha": "4.12.1",
     "eslint-plugin-import": "2.9.0",
-    "nyc": "11.4.1",
+    "eslint-plugin-mocha": "4.12.1",
     "mocha": "5.0.4",
     "mocha-clean": "1.0.0",
+    "nyc": "11.4.1",
     "pegjs": "0.10.0"
   },
   "peerDependencies": {},

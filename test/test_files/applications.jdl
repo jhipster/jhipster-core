@@ -1,9 +1,16 @@
 application {
   config {
     baseName toto
-    packageName com.mathieu.toto
-    enableTranslation false
-    languages en, fr
+
+    /* FreeStyle token wrapped in double quotes - (string literal) */
+    path "foo/bar/blha.jdl.java"
+
+    /* wrap a list of values in square parenthesis */
+    languages [en, fr]
+
+    /* optional commas */
+    packageName com.mathieu.toto,
+    enableTranslation false,
   }
 }
 
@@ -12,6 +19,6 @@ application {
     baseName titi
     packageName com.mathieu.titi
     enableTranslation false
-    languages en, fr
+    languages [en, fr]
   }
 }
