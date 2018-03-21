@@ -16,7 +16,7 @@ fs.writeFileSync(
     __dirname,
     '../lib/dsl/gen/generated_serialized_grammar.js'
   ),
-  `/*eslint-disable */
+  `/* eslint-disable no-unused-vars */
 const serializedGrammar = ${serializedGrammarText}`
 );
 
