@@ -1,0 +1,18 @@
+// used in comparability testing of old vs new parser.
+
+angularSuffix all with Foo except Bar
+
+entity Job {
+  jobTitle String pattern (/manager|supremeLeader/)
+}
+
+service Employee with serviceClass except Foo
+
+microservice A with ms except Foo
+search A with ms except Foo
+skipClient all except Foo
+
+
+/**
+ * comment at end
+ */
