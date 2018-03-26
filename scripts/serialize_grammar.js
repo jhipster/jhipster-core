@@ -6,7 +6,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const JDLParser = require('../lib/dsl/parser').JDLParser;
+const JDLParser = require('../lib/dsl/jdl_parser').JDLParser;
 
 const serializedGrammarText = JSON.stringify(new JDLParser().getSerializedGastProductions(), null, '\t');
 
