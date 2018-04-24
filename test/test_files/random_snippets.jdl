@@ -1,16 +1,37 @@
 // used in comparability testing of old vs new parser.
 
+// Test behavior of pegjs and chevrotain parsers in regard to duplicate
+// keys in the AST ("Foo") is used as the key in the angularSuffix dictionary.
 angularSuffix all with Foo except Bar
+angularSuffix all with Foo except Bar2
+
+// empty application
+application {
+
+}
+
+// empty application with empty config
+application {
+  config {
+
+  }
+}
 
 entity Job {
   jobTitle String pattern (/manager|supremeLeader/)
 }
 
-service Employee with serviceClass except Foo
-
 microservice A with ms except Foo
 search A with ms except Foo
 skipClient all except Foo
+
+application {
+  config {
+    /* pegjs parser only kept the first value of the same config key*/
+    serviceDiscoveryType false
+    serviceDiscoveryType true
+  }
+}
 
 
 /**
