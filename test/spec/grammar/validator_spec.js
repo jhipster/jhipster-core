@@ -138,7 +138,7 @@ describe('JDLSyntaxValidatorVisitor', () => {
             .to.throw('A string literal is expected, but found: "abc"');
         });
       });
-    });*/
+    }); */
 
     context('and using for enableHibernateCache', () => {
       context('a valid value', () => {
