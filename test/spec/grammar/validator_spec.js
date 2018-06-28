@@ -152,6 +152,7 @@ describe('JDLSyntaxValidatorVisitor', () => {
         });
       });
 
+
       context('an invalid value', () => {
         it('will report a syntax error', () => {
           expect(() => parse(`
