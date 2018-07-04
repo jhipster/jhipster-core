@@ -187,5 +187,41 @@ describe('JDLSyntaxValidatorVisitor', () => {
         });
       });
     });
+
+    context('and using for baseName', () => {
+      context('a valid value', () => {
+        context('does not report a syntax error', () => {
+          it('Starts with digit', () => {
+            expect(() => parse(`
+            application {
+              config {
+                baseName 1myApp
+              }
+            }`)).to.not.throw();
+          });
+
+          it('only digits', () => {
+            expect(() => parse(`
+            application {
+              config {
+                baseName 1234
+              }
+            }`)).to.not.throw();
+          });
+        });
+      });
+
+      context('an invalid value', () => {
+        it('will report a syntax error', () => {
+          expect(() => parse(`
+            application {
+              config {
+                baseName "oops I did it again"
+              }
+            }`)).to.throw('A name is expected, but found: ""oops I did it again""\n'
+            + '\tat line: 4, column: 26');
+        });
+      });
+    });
   });
 });
