@@ -57,34 +57,34 @@ describe('EntityParser', () => {
           }).to.throw('The JDL object and the database type are both mandatory.');
         });
       });
-      context('such as invalid databaseType', () => {
-        let jdlObject = null;
+      // context('such as invalid databaseType', () => {
+      //   let jdlObject = null;
 
-        before(() => {
-          const entityA = new JDLEntity({ name: 'A' });
-          const entityB = new JDLEntity({ name: 'B' });
-          const relationship = new JDLRelationship({
-            from: entityA.name,
-            to: entityB.name,
-            injectedFieldInFrom: 'b',
-            injectedFieldInTo: 'a',
-            type: RelationshipTypes.MANY_TO_MANY
-          });
-          jdlObject = new JDLObject();
-          jdlObject.addEntity(entityA);
-          jdlObject.addEntity(entityB);
-          jdlObject.addRelationship(relationship);
-        });
+      //   before(() => {
+      //     const entityA = new JDLEntity({ name: 'A' });
+      //     const entityB = new JDLEntity({ name: 'B' });
+      //     const relationship = new JDLRelationship({
+      //       from: entityA.name,
+      //       to: entityB.name,
+      //       injectedFieldInFrom: 'b',
+      //       injectedFieldInTo: 'a',
+      //       type: RelationshipTypes.MANY_TO_MANY
+      //     });
+      //     jdlObject = new JDLObject();
+      //     jdlObject.addEntity(entityA);
+      //     jdlObject.addEntity(entityB);
+      //     jdlObject.addRelationship(relationship);
+      //   });
 
-        it('throws an error', () => {
-          expect(() => {
-            EntityParser.parse({
-              jdlObject,
-              databaseType: DatabaseTypes.MONGODB
-            });
-          }).to.throw("NoSQL entities don't have relationships.");
-        });
-      });
+      //   it('throws an error', () => {
+      //     expect(() => {
+      //       EntityParser.parse({
+      //         jdlObject,
+      //         databaseType: DatabaseTypes.MONGODB
+      //       });
+      //     }).to.throw("NoSQL entities don't have relationships.");
+      //   });
+      // });
     });
     context('when passing valid arguments', () => {
       let content = null;
