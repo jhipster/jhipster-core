@@ -29,114 +29,51 @@ describe('JDLSyntaxValidatorVisitor', () => {
             parse(`
             application {
               config {
-                applicationType foo
+                applicationType gateway
               }
             }`)
           ).to.not.throw();
         });
       });
       context('an invalid value', () => {
-        context('such as a number', () => {
+        context('such as GATEWAY', () => {
           it('will report a syntax error', () => {
             expect(() =>
               parse(`
               application {
                 config {
-                  applicationType 666
+                  applicationType GATEWAY
                 }
               }`)
-            ).to.throw('A name is expected, but found: "666"');
-          });
-        });
-        context('such as an invalid character', () => {
-          it('will report a syntax error', () => {
-            expect(() =>
-              parse(`
-              application {
-                config {
-                  applicationType -
-                }
-              }`)
-            ).to.throw('unexpected character: ->-<-');
-          });
-        });
-        context('such as a capitalized letters', () => {
-          it('will report a syntax error', () => {
-            expect(() =>
-              parse(`
-              application {
-                config {
-                  applicationType FOO
-                }
-              }`)
-            ).to.throw('The applicationType property name must match: /^[a-z]+$/');
-          });
-        });
-
-        context('having illegal characters', () => {
-          it('will report a syntax error', () => {
-            expect(() =>
-              parse(`
-              application {
-                config {
-                  applicationType foo.bar
-                }
-              }`)
-            ).to.throw('A single name is expected, but found a fully qualified name');
+            ).to.throw('The applicationType property name must match: /^(monolith|microservice|gateway|uaa)$/');
           });
         });
       });
     });
     context('and using for authenticationType', () => {
       context('a valid value', () => {
-        context('with only letters', () => {
-          it('does not report a syntax error', () => {
-            expect(() =>
-              parse(`
+        it('does not report a syntax error for name', () => {
+          expect(() =>
+            parse(`
             application {
               config {
                 authenticationType jwt
               }
             }`)
-            ).to.not.throw();
-          });
-        });
-        context('with both letters and numbers', () => {
-          it('does not report a syntax error', () => {
-            expect(() =>
-              parse(`
-            application {
-              config {
-                authenticationType jwt42
-              }
-            }`)
-            ).to.not.throw();
-          });
+          ).to.not.throw();
         });
       });
       context('an invalid value', () => {
-        context('such as quotes', () => {
-          it('fails', () => {
+        context('such as JWT', () => {
+          it('will report a syntax error', () => {
             expect(() =>
               parse(`
-            application {
-              config {
-                authenticationType "jwt"
-              }
-            }`)
-            ).to.throw('A name is expected, but found: ""jwt""');
-          });
-        });
-        context('such as numbers', () => {
-          it('fails', () => {
-            expect(() =>
-              parse(`
-            application {
-              config {
-                authenticationType 42
-              }
-            }`)
-            ).to.throw('A name is expected, but found: "42"');
+              application {
+                config {
+                  authenticationType JWT
+                }
+              }`)
+            ).to.throw('The authenticationType property name must match: /^(jwt|session|uaa|oauth2)$/');
           });
         });
       });
