@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -29,4 +28,25 @@ steps:
 
 - script: |
     npm install
-  displayName: 'npm run tests'
+  displayName: 'Run tests'
+
+- task: SonarCloudPrepare@1
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  inputs:
+    SonarCloud: 'SonarCloud-Jhipster-Core'
+    organization: 'shaolans-github'
+    scannerMode: 'CLI'
+    configMode: 'file'
+    extraProperties: sonar.projectKey=Shaolans_jhipster-core
+  displayName: 'SonarCloud: Configure'
+
+- task: SonarCloudAnalyze@1
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  displayName: 'SonarCloud: Run Code Analysis'
+
+- task: SonarCloudPublish@1
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  inputs:
+    pollingTimeoutSec: '300'
+  displayName: 'SonarCloud: Publish results'
+  
