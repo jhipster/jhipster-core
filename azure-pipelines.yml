@@ -24,29 +24,28 @@ steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '10.15.3'
-  displayName: 'Install Node.js'
+  displayName: 'TOOLS: install Node.js'
 
 - script: |
     npm install
-  displayName: 'Run tests'
+  displayName: 'TEST: run tests'
 
 - task: SonarCloudPrepare@1
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   inputs:
     SonarCloud: 'SonarCloud-Jhipster-Core'
-    organization: 'shaolans-github'
+    organization: 'jhipster'
     scannerMode: 'CLI'
     configMode: 'file'
-    extraProperties: sonar.projectKey=Shaolans_jhipster-core
-  displayName: 'SonarCloud: Configure'
+  displayName: 'SonarCloud: configure'
 
 - task: SonarCloudAnalyze@1
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-  displayName: 'SonarCloud: Run Code Analysis'
+  displayName: 'SonarCloud: run code analysis'
 
 - task: SonarCloudPublish@1
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   inputs:
     pollingTimeoutSec: '300'
-  displayName: 'SonarCloud: Publish results'
+  displayName: 'SonarCloud: publish results'
   
