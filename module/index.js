@@ -108,7 +108,7 @@ module.exports = {
   exportApplications: JHipsterApplicationExporter.exportApplications,
   exportApplication: JHipsterApplicationExporter.exportApplication,
   /* JDL exporting */
-  exportToJDL: JDLExporter.exportToJDL,
+  JDLExporter,
   /* JDL utils */
   isJDLFile: JDLReader.checkFileIsJDLFile,
   /* JSON utils */
