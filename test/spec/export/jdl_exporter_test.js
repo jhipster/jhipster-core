@@ -21,6 +21,7 @@
 const { expect } = require('chai');
 
 const fs = require('fs');
+const path = require('path');
 const JDLObject = require('../../../lib/core/jdl_object');
 const JDLEntity = require('../../../lib/core/jdl_entity');
 const JDLExporter = require('../../../lib/export/jdl_exporter');
@@ -91,6 +92,40 @@ describe('JDLExporter', () => {
         });
         it('writes the JDL inside the file', () => {
           expect(jdlContent).to.equal('entity Toto\n');
+        });
+      });
+    });
+  });
+  describe('::loadJhipsterConfigAndEntities', () => {
+    context('when passing a directory', () => {
+      context('without a .yo-rc.json', () => {
+        it('throws an error', () => {
+          expect(() => {
+            JDLExporter.loadJhipsterConfigAndEntities(path.resolve('.'));
+          }).to.throw('The directory does not contain a .yo-rc.json nor any of sub folders (depth 1)');
+        });
+      });
+      context('with a .yo-rc.json', () => {
+        it('on a mono application project', () => {
+          const exported = JDLExporter.loadJhipsterConfigAndEntities(
+            path.resolve(__dirname, '..', '..', 'test_files', 'export_jdl_app', 'mono_app')
+          );
+          const expected = fs.readFileSync(
+            path.resolve(__dirname, '..', '..', 'test_files', 'export_jdl_app', 'mono_app', 'expected-jdl.jdl'),
+            'utf-8'
+          );
+          expect(exported.toString()).to.equal(expected);
+        });
+
+        it('on a multi applications project', () => {
+          const exported = JDLExporter.loadJhipsterConfigAndEntities(
+            path.resolve(__dirname, '..', '..', 'test_files', 'export_jdl_app', 'multi_app')
+          );
+          const expected = fs.readFileSync(
+            path.resolve(__dirname, '..', '..', 'test_files', 'export_jdl_app', 'multi_app', 'expected-jdl.jdl'),
+            'utf-8'
+          );
+          expect(exported.toString()).to.equal(expected);
         });
       });
     });
