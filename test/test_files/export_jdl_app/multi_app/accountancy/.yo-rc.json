@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "enableHibernateCache": false,
+    "enableSwaggerCodegen": false,
+    "enableTranslation": true,
+    "jhiPrefix": "jhi",
+    "languages": [
+      "en",
+      "fr"
+    ],
+    "messageBroker": false,
+    "nativeLanguage": "en",
+    "packageName": "com.jhipster.demo.accountancy",
+    "packageFolder": "com/jhipster/demo/accountancy",
+    "prodDatabaseType": "mongodb",
+    "searchEngine": false,
+    "serviceDiscoveryType": "eureka",
+    "skipClient": true,
+    "testFrameworks": [
+      "gatling"
+    ],
+    "websocket": false,
+    "baseName": "accountancy",
+    "applicationType": "microservice",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "buildTool": "maven",
+    "serverPort": "8082",
+    "skipUserManagement": true,
+    "jhipsterVersion": "6.0.1",
+    "clientPackageManager": "npm",
+    "jwtSecretKey": "MzdlMzJhNGYyYTllOTM4OGMyYTM1ZTc2NDY0MzY1MjRlYzA1YjdlOWM2Y2JlODEyZjJjZmE4MzRhZTMzNmMzZDY0NTNjNmFiYmZmY2JkZjUxOTgwYzQ2OTZkMGZlMzIyNGY1NWVlNjc3Nzk1OWZlM2Q3OTBhNGRiMjdkM2Y1MDE=",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": []
+  },
+  "entities": [
+    "Invoice",
+    "Shipment"
+  ]
+}

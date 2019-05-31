@@ -1,0 +1,74 @@
+{
+    "name": "Invoice",
+    "fields": [
+        {
+            "fieldName": "code",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "details",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "InvoiceStatus",
+            "fieldValues": "PAID,ISSUED,CANCELLED",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "paymentMethod",
+            "fieldType": "PaymentMethod",
+            "fieldValues": "CREDIT_CARD,CASH_ON_DELIVERY,PAYPAL",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "paymentDate",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "paymentAmount",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "shipment",
+            "otherEntityRelationshipName": "invoice",
+            "relationshipName": "shipment"
+        }
+    ],
+    "changelogDate": "20190531074530",
+    "entityTableName": "invoice",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": [
+        "store",
+        "accountancy"
+    ],
+    "microserviceName": "accountancy"
+}

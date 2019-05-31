@@ -1,0 +1,57 @@
+{
+    "name": "Ticket",
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dueDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "done",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "project",
+            "otherEntityName": "project",
+            "otherEntityField": "name",
+            "otherEntityRelationshipName": "ticket"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "assignedTo",
+            "otherEntityName": "user",
+            "otherEntityField": "login",
+            "otherEntityRelationshipName": "ticket"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "ticket",
+            "relationshipName": "label",
+            "otherEntityName": "label",
+            "otherEntityField": "label",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20190219143725",
+    "entityTableName": "ticket",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

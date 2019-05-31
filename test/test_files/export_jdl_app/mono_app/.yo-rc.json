@@ -1,0 +1,38 @@
+{
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "com.internship.app",
+            "nativeLanguage": "en"
+        },
+        "jhipsterVersion": "5.8.1",
+        "applicationType": "monolith",
+        "baseName": "BugTrackerJHipster",
+        "packageName": "com.internship.app",
+        "packageFolder": "com/internship/app",
+        "serverPort": "8080",
+        "authenticationType": "jwt",
+        "cacheProvider": "ehcache",
+        "enableHibernateCache": true,
+        "websocket": "spring-websocket",
+        "databaseType": "sql",
+        "devDatabaseType": "h2Disk",
+        "prodDatabaseType": "mssql",
+        "searchEngine": false,
+        "messageBroker": false,
+        "serviceDiscoveryType": "eureka",
+        "buildTool": "maven",
+        "enableSwaggerCodegen": false,
+        "jwtSecretKey": "NzA1NTUyNTAzMjVhYTc5OGQzY2Q0ZjllM2QyMjRlMTQ5ZmYyNDUyZDBhMmJmNzkxOThkODBjZjNhY2I2ODk3YWZkYjA4YzQxYTMzY2I0OWMxMjU0NzkyMzEwNzcyYzg3ZTU3Y2MwZWM4NmI5MjFmN2Y3Njk5MjEyYWZmZWFmMzk=",
+        "clientFramework": "angularX",
+        "useSass": true,
+        "clientPackageManager": "npm",
+        "testFrameworks": ["gatling"],
+        "jhiPrefix": "jhi",
+        "entitySuffix": "",
+        "dtoSuffix": "DTO",
+        "otherModules": [],
+        "enableTranslation": true,
+        "nativeLanguage": "en",
+        "languages": ["en", "fr"]
+    }
+}

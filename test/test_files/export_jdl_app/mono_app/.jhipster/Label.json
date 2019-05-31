@@ -1,0 +1,32 @@
+{
+    "name": "Label",
+    "fields": [
+        {
+            "fieldName": "label",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": 3
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "ticket",
+            "otherEntityName": "ticket",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "label"
+        }
+    ],
+    "changelogDate": "20190219143724",
+    "entityTableName": "label",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

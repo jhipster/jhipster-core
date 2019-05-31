@@ -1,0 +1,43 @@
+{
+    "name": "Shipment",
+    "fields": [
+        {
+            "fieldName": "trackingCode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "details",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "invoice",
+            "otherEntityRelationshipName": "shipment",
+            "relationshipValidateRules": "required",
+            "relationshipName": "invoice",
+            "otherEntityField": "code"
+        }
+    ],
+    "changelogDate": "20190531074531",
+    "entityTableName": "shipment",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": [
+        "store",
+        "accountancy"
+    ],
+    "microserviceName": "accountancy"
+}
