@@ -1,0 +1,57 @@
+application {
+  config {
+    databaseType sql
+    devDatabaseType h2Disk
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    languages [en, fr]
+    messageBroker false
+    nativeLanguage en
+    packageName com.internship.app
+    prodDatabaseType mssql
+    searchEngine false
+    serviceDiscoveryType eureka
+    skipClient false
+    skipServer false
+    testFrameworks [gatling]
+    websocket spring-websocket
+    applicationType monolith
+    baseName BugTrackerJHipster
+    serverPort 8080
+    authenticationType jwt
+    cacheProvider ehcache
+    buildTool maven
+    clientFramework angularX
+    useSass true
+    clientPackageManager npm
+    entitySuffix false
+    dtoSuffix DTO
+    skipUserManagement false
+  }
+
+  entities Label, Project, Ticket
+}
+
+entity Label {
+  label String required minlength(3)
+}
+entity Project {
+  name String
+}
+entity Ticket {
+  title String required,
+  description String,
+  dueDate LocalDate,
+  done Boolean
+}
+relationship ManyToOne {
+  Ticket{project(name)} to Project,
+  Ticket{assignedTo(login)} to User
+}
+relationship ManyToMany {
+  Ticket{label(label)} to Label{ticket}
+}
+
+paginate Ticket with pagination
