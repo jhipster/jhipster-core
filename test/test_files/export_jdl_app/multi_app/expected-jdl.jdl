@@ -1,0 +1,190 @@
+application {
+  config {
+    databaseType mongodb
+    devDatabaseType mongodb
+    enableHibernateCache false
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    languages [en, fr]
+    messageBroker false
+    nativeLanguage en
+    packageName com.jhipster.demo.accountancy
+    prodDatabaseType mongodb
+    searchEngine false
+    serviceDiscoveryType eureka
+    skipClient true
+    testFrameworks [gatling]
+    websocket false
+    baseName accountancy
+    applicationType microservice
+    authenticationType jwt
+    cacheProvider no
+    buildTool maven
+    serverPort 8082
+    skipUserManagement true
+    clientPackageManager npm
+    entitySuffix false
+    dtoSuffix DTO
+  }
+
+  entities Invoice, Shipment
+}
+application {
+  config {
+    databaseType sql
+    devDatabaseType h2Disk
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    languages [en, fr]
+    messageBroker false
+    nativeLanguage en
+    packageName com.jhipster.demo.crm
+    prodDatabaseType postgresql
+    searchEngine elasticsearch
+    serviceDiscoveryType eureka
+    skipClient true
+    testFrameworks []
+    websocket false
+    baseName crm
+    applicationType microservice
+    authenticationType jwt
+    buildTool maven
+    serverPort 8081
+    skipUserManagement true
+    clientPackageManager npm
+    cacheProvider hazelcast
+    entitySuffix false
+    dtoSuffix DTO
+  }
+
+  entities Customer, OrderItem, Product, ProductOrder
+}
+application {
+  config {
+    databaseType sql
+    devDatabaseType h2Disk
+    enableHibernateCache true
+    enableSwaggerCodegen true
+    enableTranslation true
+    jhiPrefix jhi
+    languages [en, fr]
+    messageBroker false
+    nativeLanguage en
+    packageName com.jhipster.demo.store
+    prodDatabaseType mysql
+    searchEngine false
+    serviceDiscoveryType eureka
+    skipClient false
+    skipServer false
+    testFrameworks [protractor]
+    websocket false
+    baseName store
+    applicationType gateway
+    authenticationType jwt
+    cacheProvider hazelcast
+    buildTool maven
+    clientFramework angularX
+    skipUserManagement false
+    clientPackageManager npm
+    serverPort 8080
+    useSass true
+    entitySuffix false
+    dtoSuffix DTO
+  }
+
+  entities Customer, Invoice, OrderItem, Product, ProductOrder, Shipment
+}
+
+entity Invoice {
+  code String required,
+  date Instant required,
+  details String,
+  status InvoiceStatus required,
+  paymentMethod PaymentMethod required,
+  paymentDate Instant required,
+  paymentAmount BigDecimal required
+}
+entity Shipment {
+  trackingCode String,
+  date Instant required,
+  details String
+}
+entity Customer {
+  firstName String required,
+  lastName String required,
+  gender Gender required,
+  email String required pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/),
+  phone String required,
+  addressLine1 String required,
+  addressLine2 String,
+  city String required,
+  country String required
+}
+entity OrderItem {
+  quantity Integer required min(0),
+  totalPrice BigDecimal required min(0),
+  status OrderItemStatus required
+}
+entity Product {
+  name String required,
+  description String,
+  price BigDecimal required min(0),
+  size Size required,
+  image ImageBlob
+}
+entity ProductOrder {
+  placedDate Instant required,
+  status OrderStatus required,
+  code String required,
+  invoiceId String
+}
+enum InvoiceStatus {
+  PAID,
+  ISSUED,
+  CANCELLED
+}
+enum PaymentMethod {
+  CREDIT_CARD,
+  CASH_ON_DELIVERY,
+  PAYPAL
+}
+enum Gender {
+  MALE,
+  FEMALE,
+  OTHER
+}
+enum OrderItemStatus {
+  AVAILABLE,
+  OUT_OF_STOCK,
+  BACK_ORDER
+}
+enum Size {
+  S,
+  M,
+  L,
+  XL,
+  XXL
+}
+enum OrderStatus {
+  COMPLETED,
+  PENDING,
+  CANCELLED
+}
+
+relationship OneToMany {
+  Invoice{shipment} to Shipment{invoice(code) required},
+  ProductOrder{orderItem} to OrderItem{order(code) required},
+  Customer{order} to ProductOrder{customer(email) required}
+}
+relationship ManyToOne {
+  OrderItem{product(name) required} to Product
+}
+
+skipClient *
+paginate Invoice, Shipment, Customer, OrderItem, Product, ProductOrder with pagination
+service Invoice, Shipment, Customer, OrderItem, Product, ProductOrder with serviceClass
+microservice Invoice, Shipment with accountancy
+microservice Customer, OrderItem, Product, ProductOrder with crm
