@@ -104,7 +104,9 @@ dto Employee with mapstruct
 
 service Employee with serviceClass
 
-microservice * with mymicroservice
+microservice all with mymicroservice
+
+readOnly JobHistory
 
 search Employee with elasticsearch
 

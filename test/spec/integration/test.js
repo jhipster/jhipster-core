@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2018 the original author or authors from the JHipster project.
+ * Copyright 2013-2019 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -23,9 +23,9 @@ const path = require('path');
 const { expect } = require('chai');
 
 const ApplicationTypes = require('../../../lib/core/jhipster/application_types');
-const JDLReader = require('../../../lib/reader/jdl_reader');
-const DocumentParser = require('../../../lib/parser/document_parser');
-const JDLExporter = require('../../../lib/export/jdl_exporter');
+const JDLReader = require('../../../lib/readers/jdl_reader');
+const DocumentParser = require('../../../lib/parsers/document_parser');
+const JDLExporter = require('../../../lib/exporters/jdl_exporter');
 
 describe('integration tests', () => {
   context('when parsing and exporting a JDL', () => {

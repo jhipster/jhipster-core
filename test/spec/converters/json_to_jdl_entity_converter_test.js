@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2018 the original author or authors from the JHipster project.
+ * Copyright 2013-2019 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -28,12 +28,12 @@ const JDLUnaryOption = require('../../../lib/core/jdl_unary_option');
 const UnaryOptions = require('../../../lib/core/jhipster/unary_options');
 const { JPA_DERIVED_IDENTIFIER } = require('../../../lib/core/jhipster/relationship_options');
 const {
-  Options: { DTO, SEARCH_ENGINE, PAGINATION, MICROSERVICE, ANGULAR_SUFFIX, SERVICE },
+  Options: { DTO, SEARCH, PAGINATION, MICROSERVICE, ANGULAR_SUFFIX, SERVICE },
   Values: {
     dto: { MAPSTRUCT },
     pagination,
     service: { SERVICE_CLASS },
-    searchEngine: { ELASTIC_SEARCH }
+    search: { ELASTIC_SEARCH }
   }
 } = require('../../../lib/core/jhipster/binary_options');
 
@@ -121,7 +121,7 @@ describe('JSONToJDLEntityConverter', () => {
               .getOptions()
               .filter(
                 option =>
-                  option.name === SEARCH_ENGINE && option.value === ELASTIC_SEARCH && option.entityNames.has('Employee')
+                  option.name === SEARCH && option.value === ELASTIC_SEARCH && option.entityNames.has('Employee')
               ).length
           ).to.eq(1);
           expect(
@@ -153,6 +153,11 @@ describe('JSONToJDLEntityConverter', () => {
               .getOptions()
               .filter(option => option.name === UnaryOptions.FILTER && option.entityNames.has('Employee')).length
           ).to.eq(1);
+          expect(
+            jdlObject
+              .getOptions()
+              .filter(option => option.name === UnaryOptions.READ_ONLY && option.entityNames.has('Employee')).length
+          ).to.equal(1);
         });
       });
 
@@ -279,9 +284,9 @@ describe('JSONToJDLEntityConverter', () => {
         context('such as jpaDerivedIdentifier', () => {
           it('accepts it', () => {
             expect(
-              jdlObject.relationships
-                .getOneToOne('OneToOne_Country{region}_Region{country}')
-                .options.has(JPA_DERIVED_IDENTIFIER)
+              jdlObject.relationships.getOneToOne('OneToOne_Country{region}_Region{country}').options[
+                JPA_DERIVED_IDENTIFIER
+              ]
             ).to.be.true;
           });
         });

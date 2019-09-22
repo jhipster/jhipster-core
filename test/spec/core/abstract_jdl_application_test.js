@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2018 the original author or authors from the JHipster project.
+ * Copyright 2013-2019 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -20,7 +20,7 @@
 /* eslint-disable no-unused-expressions */
 const { expect } = require('chai');
 const AbstractJDLApplication = require('../../../lib/core/abstract_jdl_application');
-const { MONGODB, COUCHBASE, CASSANDRA } = require('../../../lib/core/jhipster/database_types');
+const { MONGODB, COUCHBASE, CASSANDRA, NO } = require('../../../lib/core/jhipster/database_types');
 
 describe('AbstractJDLApplication', () => {
   describe('::new', () => {
@@ -88,7 +88,7 @@ describe('AbstractJDLApplication', () => {
         expect(jdlApplicationConfig.entitySuffix).to.equal('');
       });
     });
-    [MONGODB, COUCHBASE, CASSANDRA].forEach(databaseType => {
+    [MONGODB, COUCHBASE, CASSANDRA, NO].forEach(databaseType => {
       context(`when the DB type is either ${databaseType}`, () => {
         before(() => {
           const jdlApplication = new AbstractJDLApplication({
@@ -103,6 +103,21 @@ describe('AbstractJDLApplication', () => {
         it('sets prodDatabaseType to its value', () => {
           expect(jdlApplicationConfig.prodDatabaseType).to.equal(databaseType);
         });
+      });
+    });
+    context('when the application is reactive', () => {
+      let application;
+
+      before(() => {
+        application = new AbstractJDLApplication({
+          config: {
+            reactive: true
+          }
+        });
+      });
+
+      it('should unset any cache provider', () => {
+        expect(application.config.cacheProvider).to.equal('no');
       });
     });
   });
@@ -207,7 +222,36 @@ describe('AbstractJDLApplication', () => {
       });
 
       it('exports the entity names', () => {
-        expect(jdlApplication.toString().includes('entities A, B, C')).to.be.true;
+        expect(jdlApplication.toString()).to.equal(
+          `application {
+  config {
+    databaseType sql
+    devDatabaseType h2Disk
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    languages [en, fr]
+    messageBroker false
+    nativeLanguage en
+    packageName com.mycompany.myapp
+    packageFolder com/mycompany/myapp
+    prodDatabaseType mysql
+    searchEngine false
+    serviceDiscoveryType false
+    skipClient false
+    skipServer false
+    testFrameworks []
+    websocket false
+    baseName jhipster
+    buildTool maven
+    skipUserManagement false
+    clientPackageManager npm
+  }
+
+  entities A, B, C
+}`
+        );
       });
     });
   });

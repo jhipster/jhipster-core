@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2018 the original author or authors from the JHipster project.
+ * Copyright 2013-2019 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -24,6 +24,7 @@ const RelationshipTypes = require('../lib/core/jhipster/relationship_types');
 const FieldTypes = require('../lib/core/jhipster/field_types');
 const Validations = require('../lib/core/jhipster/validations');
 const DatabaseTypes = require('../lib/core/jhipster/database_types');
+const LintRules = require('../lib/linter/rules');
 
 const JDLObject = require('../lib/core/jdl_object');
 const JDLMonolithApplication = require('../lib/core/jdl_monolith_application');
@@ -42,17 +43,19 @@ const JDLBinaryOption = require('../lib/core/jdl_binary_option');
 const JDLOptions = require('../lib/core/jdl_options');
 
 const JDLImporter = require('../lib/jdl/jdl_importer');
-const JDLReader = require('../lib/reader/jdl_reader');
-const JsonReader = require('../lib/reader/json_reader');
-const DocumentParser = require('../lib/parser/document_parser');
-const EntityParser = require('../lib/parser/entity_parser');
+const JDLLinter = require('../lib/linter/jdl_linter');
+const JDLReader = require('../lib/readers/jdl_reader');
+const JsonReader = require('../lib/readers/json_reader');
+const DocumentParser = require('../lib/parsers/document_parser');
+const EntityParser = require('../lib/parsers/entity_parser');
 const { convertApplicationsToJDL } = require('../lib/converters/json_to_jdl_application_converter');
 const { convertEntitiesToJDL } = require('../lib/converters/json_to_jdl_entity_converter');
 const { convertServerOptionsToJDL } = require('../lib/converters/json_to_jdl_option_converter');
-const JHipsterApplicationExporter = require('../lib/export/jhipster_application_exporter');
-const JHipsterEntityExporter = require('../lib/export/jhipster_entity_exporter');
-const JDLExporter = require('../lib/export/jdl_exporter');
-const JSONFileReader = require('../lib/reader/json_file_reader');
+const JHipsterApplicationExporter = require('../lib/exporters/jhipster_application_exporter');
+const JHipsterEntityExporter = require('../lib/exporters/jhipster_entity_exporter');
+const JDLExporter = require('../lib/exporters/jdl_exporter');
+const JSONFileReader = require('../lib/readers/json_file_reader');
+const { convertToJDL } = require('../lib/converters/json_to_jdl_converter');
 const ReservedKeywords = require('../lib/core/jhipster/reserved_keywords');
 const FileUtils = require('../lib/utils/file_utils');
 const ObjectUtils = require('../lib/utils/object_utils');
@@ -90,6 +93,9 @@ module.exports = {
   JDLOptions,
   /* JDL Importer */
   JDLImporter,
+  /* JDL Linting */
+  JDLLinter,
+  LintRules,
   /* JDL reading */
   parseFromFiles: JDLReader.parseFromFiles,
   /* JSON reading */
@@ -109,6 +115,7 @@ module.exports = {
   exportApplication: JHipsterApplicationExporter.exportApplication,
   /* JDL exporting */
   exportToJDL: JDLExporter.exportToJDL,
+  convertToJDL,
   /* JDL utils */
   isJDLFile: JDLReader.checkFileIsJDLFile,
   /* JSON utils */

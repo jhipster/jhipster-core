@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2018 the original author or authors from the JHipster project.
+ * Copyright 2013-2019 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see http://www.jhipster.tech/
  * for more information.
@@ -28,7 +28,7 @@ describe('JDL DSL API', () => {
       let ast;
 
       before(() => {
-        ast = parse('@service(serviceClass) entity A {field String}');
+        ast = parse('@service(serviceClass) entity A {@Id field String}');
       });
 
       it('returns an AST', () => {
@@ -42,7 +42,8 @@ describe('JDL DSL API', () => {
               name: 'field',
               type: 'String',
               validations: [],
-              javadoc: null
+              javadoc: null,
+              annotations: [{ option: 'Id', type: 'UNARY' }]
             }
           ],
           javadoc: null
@@ -125,7 +126,7 @@ describe('JDL DSL API', () => {
       });
 
       it('provides suggestions', () => {
-        expect(result).to.have.lengthOf(19);
+        expect(result).to.have.lengthOf(20);
         expect(result).to.have.members([
           tokens.AT,
           tokens.APPLICATION,
@@ -140,6 +141,7 @@ describe('JDL DSL API', () => {
           tokens.MICROSERVICE,
           tokens.JAVADOC,
           tokens.PAGINATE,
+          tokens.READ_ONLY,
           tokens.SKIP_CLIENT,
           tokens.SKIP_SERVER,
           tokens.NO_FLUENT_METHOD,
@@ -179,7 +181,7 @@ describe('JDL DSL API', () => {
       });
 
       it('provides suggestions', () => {
-        expect(result).to.have.lengthOf(8);
+        expect(result).to.have.lengthOf(9);
         expect(result).to.have.members([
           tokens.REQUIRED,
           tokens.UNIQUE,
@@ -189,6 +191,7 @@ describe('JDL DSL API', () => {
           tokens.COMMA,
           tokens.RCURLY,
           tokens.JAVADOC,
+          tokens.AT,
           tokens.NAME
         ]);
       });

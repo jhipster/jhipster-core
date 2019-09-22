@@ -67,6 +67,7 @@ describe('JDLImporter', () => {
           entityTableName: 'country',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -120,6 +121,7 @@ describe('JDLImporter', () => {
           entityTableName: 'department',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -191,10 +193,11 @@ describe('JDLImporter', () => {
             }
           ],
           name: 'Employee',
-          javadoc: 'The Employee entity.\nSecond line in javadoc.',
+          javadoc: 'The Employee entity.\\nSecond line in javadoc.',
           entityTableName: 'employee',
           dto: 'mapstruct',
           pagination: 'infinite-scroll',
+          readOnly: false,
           service: 'serviceClass',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -255,6 +258,7 @@ describe('JDLImporter', () => {
           entityTableName: 'job',
           dto: 'no',
           pagination: 'pagination',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -313,6 +317,7 @@ describe('JDLImporter', () => {
           javadoc: 'JobHistory comment.',
           entityTableName: 'job_history',
           dto: 'no',
+          readOnly: true,
           pagination: 'infinite-scroll',
           service: 'no',
           jpaMetamodelFiltering: false,
@@ -352,6 +357,7 @@ describe('JDLImporter', () => {
           entityTableName: 'location',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -379,6 +385,7 @@ describe('JDLImporter', () => {
           entityTableName: 'region',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -412,6 +419,7 @@ describe('JDLImporter', () => {
           entityTableName: 'task',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -563,6 +571,8 @@ describe('JDLImporter', () => {
             serviceDiscoveryType: false,
             clientPackageManager: 'npm',
             clientFramework: 'angularX',
+            clientTheme: 'none',
+            clientThemeVariant: '',
             nativeLanguage: 'en',
             skipUserManagement: false,
             skipClient: false,
@@ -596,6 +606,8 @@ describe('JDLImporter', () => {
             serviceDiscoveryType: 'eureka',
             clientPackageManager: 'npm',
             clientFramework: 'angularX',
+            clientTheme: 'none',
+            clientThemeVariant: '',
             nativeLanguage: 'en',
             skipUserManagement: false,
             skipClient: false,
@@ -659,6 +671,8 @@ describe('JDLImporter', () => {
             serviceDiscoveryType: false,
             clientPackageManager: 'npm',
             clientFramework: 'angularX',
+            clientTheme: 'none',
+            clientThemeVariant: '',
             nativeLanguage: 'en',
             skipUserManagement: false,
             skipClient: false,
@@ -723,6 +737,8 @@ describe('JDLImporter', () => {
             serviceDiscoveryType: false,
             clientPackageManager: 'npm',
             clientFramework: 'angularX',
+            clientTheme: 'yeti',
+            clientThemeVariant: 'primary',
             nativeLanguage: 'en',
             skipUserManagement: false,
             skipClient: false,
@@ -798,6 +814,7 @@ describe('JDLImporter', () => {
           entityTableName: 'a',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -811,6 +828,7 @@ describe('JDLImporter', () => {
           entityTableName: 'b',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -824,6 +842,7 @@ describe('JDLImporter', () => {
           entityTableName: 'e',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -838,6 +857,7 @@ describe('JDLImporter', () => {
           entityTableName: 'f',
           dto: 'no',
           pagination: 'no',
+          readOnly: false,
           service: 'no',
           jpaMetamodelFiltering: false,
           fluentMethods: true,
@@ -948,12 +968,17 @@ describe('JDLImporter', () => {
         expect(returned.exportedEntities[0].service).to.equal('serviceClass');
         expect(returned.exportedEntities[0].dto).to.equal('mapstruct');
         expect(returned.exportedEntities[0].skipClient).to.equal(true);
+        expect(returned.exportedEntities[0].myCustomUnaryOption).to.equal(true);
+        expect(returned.exportedEntities[0].myCustomBinaryOption).to.equal('customValue');
         expect(returned.exportedEntities[1].pagination).to.equal('pager');
         expect(returned.exportedEntities[1].dto).to.equal('mapstruct');
         expect(returned.exportedEntities[1].service).to.equal('serviceClass');
         expect(returned.exportedEntities[2].skipClient).to.equal(true);
         expect(returned.exportedEntities[2].jpaMetamodelFiltering).to.equal(true);
         expect(returned.exportedEntities[2].pagination).to.equal('pager');
+        expect(returned.exportedEntities[2].myCustomBinaryOption).to.equal('customValue2');
+        expect(returned.exportedEntities[0].fields[0].options.id).to.equal(true);
+        expect(returned.exportedEntities[0].fields[0].options.multiValue).to.deep.equal(['value1', 'value2', 'value3']);
       });
     });
     context('when parsing a JDL with a pattern validation', () => {
@@ -1054,6 +1079,8 @@ describe('JDLImporter', () => {
             serviceDiscoveryType: false,
             clientPackageManager: 'npm',
             clientFramework: 'angularX',
+            clientTheme: 'none',
+            clientThemeVariant: '',
             nativeLanguage: 'en',
             skipUserManagement: false,
             skipClient: false,
@@ -1087,6 +1114,8 @@ describe('JDLImporter', () => {
             serviceDiscoveryType: 'eureka',
             clientPackageManager: 'npm',
             clientFramework: 'angularX',
+            clientTheme: 'none',
+            clientThemeVariant: '',
             nativeLanguage: 'en',
             skipUserManagement: false,
             skipClient: false,
@@ -1150,6 +1179,8 @@ describe('JDLImporter', () => {
             serviceDiscoveryType: false,
             clientPackageManager: 'npm',
             clientFramework: 'angularX',
+            clientTheme: 'none',
+            clientThemeVariant: '',
             nativeLanguage: 'en',
             skipUserManagement: false,
             skipClient: false,
@@ -1310,6 +1341,8 @@ describe('JDLImporter', () => {
             cacheProvider: 'hazelcast',
             buildTool: 'gradle',
             clientFramework: 'react',
+            clientTheme: 'none',
+            clientThemeVariant: '',
             useSass: true,
             skipUserManagement: false,
             clientPackageManager: 'npm',

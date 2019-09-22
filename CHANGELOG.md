@@ -1,11 +1,68 @@
-# Next release
+# Latest: v4.3.0
 
 ## What's new
-  - Having `no` as DB type is now allowed for any app (thanks to @jsm174 for notifying, and @ruddell & @cbornet for the help).
+  -  Unset `cacheProvider` option when the application type is `reactive`
+  -  Made the `reactive` option available
+
+## Fixed
+  - Fixed muli-line JDL comment generation (thanks to @yelhouti for the report!)
+  - Fixed checkNoSQLModeling with multi applications (thanks to @clement26695!)
 
 ---
 
-# Latest: v3.6.14
+# v4.2.0
+
+## What's new
+  - Improved and fixed the JDL export, which now exports single & multi apps with their entities (thanks to @Shaolans)
+
+
+## Fixed
+  - The entity's `changelogDate` is now preserved when re-generating the same entity, which doesn't result in an entity
+    rewrite when reimporting (thanks to @kaidohallik)
+
+---
+
+# v4.1.1
+
+## What's new
+  - Added the JDL linter rules to the API
+
+---
+
+# v4.1.0
+
+## What's new
+  - Added the JDL linter available to the API
+
+---
+
+# v4.0.2
+_note: v4.0.1 is the same_
+
+## What's new
+  - `vuejs` has been added as a valid client option
+
+---
+
+# v4.0.0
+
+## Breaking changes
+  - Removed methods `#addEntity` and `#excludeEntity` from JDLUnaryOption & JDLBinaryOption classes.
+    - In favor of the `#addEntityName` and `#excludeEntityName` methods that take strings instead of entities.
+
+## What's new
+  - Having `no` as DB type is now allowed for any app (thanks to @jsm174 for notifying, and @ruddell & @cbornet for the help).
+  - Additionally, having `no` as DB type automatically sets the `devDatabaseType` & `prodDatabaseType` values to `no` (thanks @jsm174 from reporting it).
+  - Linting: added the 'collapsible relationships" check
+  - For blueprints: when a JSON entity file has custom attributes, the JDL import subgen now just merges the old content with the new one
+  - The `UUID` type is now available for all the DB types! (thanks to @murdos)
+
+## Bug fixes
+  - Parsing regexp with slashes involved now works again (https://github.com/jhipster/generator-jhipster/issues/9750)
+
+---
+
+# v3.6.14
 
 ## What's new
   - Added new option `memcached` to cache providers (thanks to @Hawkurane),
@@ -18,7 +75,7 @@
 
 ---
 
-# Latest: v3.6.13
+# v3.6.13
 
 ## What's new
   - This changelog file :)
