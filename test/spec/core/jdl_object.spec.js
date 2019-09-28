@@ -43,7 +43,7 @@ describe('JDLObject', () => {
         it('fails', () => {
           expect(() => {
             object.addApplication(null);
-          }).to.throw('The application must be valid in order to be added to the JDL object.\nErrors: No application');
+          }).to.throw(/^Can't add invalid application\. Error: No application\.$/);
         });
       });
       context('such as an incomplete application', () => {
@@ -55,8 +55,7 @@ describe('JDLObject', () => {
               }
             });
           }).to.throw(
-            'The application must be valid in order to be added to the JDL object.\n' +
-              'Errors: No authentication type, No build tool'
+            /Can't add invalid application\. Error: The application options authenticationType, buildTool were not found\./
           );
         });
       });

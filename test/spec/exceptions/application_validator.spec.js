@@ -30,32 +30,47 @@ describe('ApplicationValidator', () => {
       it('fails', () => {
         expect(() => {
           checkApplication();
-        }).to.throw('An application must be passed to be validated.');
+        }).to.throw(/^No application\.$/);
         expect(() => {
           checkApplication({});
-        }).to.throw('An application must be passed to be validated.');
+        }).to.throw(/^No application\.$/);
       });
     });
     context('when passing an application', () => {
+      let basicValidApplication;
+
+      beforeEach(() => {
+        basicValidApplication = {
+          baseName: 'toto',
+          authenticationType: ApplicationOptions.authenticationType.jwt,
+          buildTool: ApplicationOptions.buildTool.maven
+        };
+      });
+
       context('with unknown options', () => {
         it('fails', () => {
           expect(() => {
             checkApplication({ config: { toto: 42 } });
-          }).to.throw("Unknown application option 'toto'.");
+          }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
         });
       });
       context('with invalid values', () => {
         it('fails', () => {
           expect(() => {
             checkApplication({ config: { devDatabaseType: 'nothing' } });
-          }).to.throw("Unknown value 'nothing' for option 'devDatabaseType'.");
+          }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
         });
       });
       context('with invalid test framework values', () => {
         it('fails', () => {
           expect(() => {
-            checkApplication({ config: { testFrameworks: ['nothing'] } });
-          }).to.throw("Unknown value 'nothing' for option 'testFrameworks'.");
+            checkApplication({
+              config: {
+                ...basicValidApplication,
+                testFrameworks: ['nothing']
+              }
+            });
+          }).to.throw(/^Unknown value 'nothing' for option 'testFrameworks'\.$/);
         });
       });
       context('with different options for databaseType, devDatabaseType and prodDatabaseType', () => {
@@ -64,24 +79,11 @@ describe('ApplicationValidator', () => {
             expect(() => {
               checkApplication({
                 config: {
-                  databaseType: SQL,
-                  devDatabaseType: 'h2Disk',
-                  prodDatabaseType: MYSQL,
-                  applicationType: MONOLITH,
-                  authenticationType: ApplicationOptions.authenticationType.jwt
-                }
-              });
-            }).not.to.throw();
-          });
-          it('does not fail', () => {
-            expect(() => {
-              checkApplication({
-                config: {
+                  ...basicValidApplication,
                   databaseType: SQL,
                   devDatabaseType: MYSQL,
                   prodDatabaseType: MYSQL,
-                  applicationType: MONOLITH,
-                  authenticationType: ApplicationOptions.authenticationType.jwt
+                  applicationType: MONOLITH
                 }
               });
             }).not.to.throw();
@@ -92,24 +94,11 @@ describe('ApplicationValidator', () => {
             expect(() => {
               checkApplication({
                 config: {
+                  ...basicValidApplication,
                   databaseType: SQL,
                   devDatabaseType: 'h2Disk',
                   prodDatabaseType: POSTGRESQL,
-                  applicationType: MONOLITH,
-                  authenticationType: ApplicationOptions.authenticationType.jwt
-                }
-              });
-            }).not.to.throw();
-          });
-          it('does not fail', () => {
-            expect(() => {
-              checkApplication({
-                config: {
-                  databaseType: SQL,
-                  devDatabaseType: POSTGRESQL,
-                  prodDatabaseType: POSTGRESQL,
-                  applicationType: MONOLITH,
-                  authenticationType: ApplicationOptions.authenticationType.jwt
+                  applicationType: MONOLITH
                 }
               });
             }).not.to.throw();
@@ -120,11 +109,11 @@ describe('ApplicationValidator', () => {
             expect(() => {
               checkApplication({
                 config: {
+                  ...basicValidApplication,
                   databaseType: MONGODB,
                   devDatabaseType: MONGODB,
                   prodDatabaseType: MONGODB,
-                  applicationType: MONOLITH,
-                  authenticationType: ApplicationOptions.authenticationType.jwt
+                  applicationType: MONOLITH
                 }
               });
             }).not.to.throw();
@@ -135,11 +124,11 @@ describe('ApplicationValidator', () => {
             expect(() => {
               checkApplication({
                 config: {
+                  ...basicValidApplication,
                   databaseType: CASSANDRA,
                   devDatabaseType: CASSANDRA,
                   prodDatabaseType: CASSANDRA,
-                  applicationType: MONOLITH,
-                  authenticationType: ApplicationOptions.authenticationType.jwt
+                  applicationType: MONOLITH
                 }
               });
             }).not.to.throw();
@@ -150,11 +139,11 @@ describe('ApplicationValidator', () => {
             expect(() => {
               checkApplication({
                 config: {
+                  ...basicValidApplication,
                   databaseType: COUCHBASE,
                   devDatabaseType: COUCHBASE,
                   prodDatabaseType: COUCHBASE,
-                  applicationType: MONOLITH,
-                  authenticationType: ApplicationOptions.authenticationType.jwt
+                  applicationType: MONOLITH
                 }
               });
             }).not.to.throw();
@@ -168,14 +157,14 @@ describe('ApplicationValidator', () => {
               expect(() => {
                 checkApplication({
                   config: {
+                    ...basicValidApplication,
                     databaseType: SQL,
                     devDatabaseType: ApplicationOptions.devDatabaseType.h2Memory,
                     prodDatabaseType: MONGODB
                   }
                 });
               }).to.throw(
-                "Only 'mysql', 'postgresql', 'mariadb', 'oracle', 'mssql' are allowed as prodDatabaseType values for " +
-                  "databaseType 'sql'."
+                /^Only 'mysql', 'postgresql', 'mariadb', 'oracle', 'mssql' are allowed as prodDatabaseType values for databaseType 'sql'\.$/
               );
             });
           });
@@ -184,13 +173,14 @@ describe('ApplicationValidator', () => {
               expect(() => {
                 checkApplication({
                   config: {
+                    ...basicValidApplication,
                     databaseType: SQL,
                     devDatabaseType: MYSQL,
                     prodDatabaseType: POSTGRESQL
                   }
                 });
               }).to.throw(
-                "Only 'h2Memory', 'h2Disk', 'postgresql' are allowed as devDatabaseType values for databaseType 'sql'."
+                /^Only 'h2Memory', 'h2Disk', 'postgresql' are allowed as devDatabaseType values for databaseType 'sql'\.$/
               );
             });
           });
@@ -199,14 +189,14 @@ describe('ApplicationValidator', () => {
               expect(() => {
                 checkApplication({
                   config: {
+                    ...basicValidApplication,
                     databaseType: SQL,
                     devDatabaseType: MONGODB,
                     prodDatabaseType: MONGODB
                   }
                 });
               }).to.throw(
-                "Only 'mysql', 'postgresql', 'mariadb', 'oracle', 'mssql' are allowed as prodDatabaseType values for " +
-                  "databaseType 'sql'."
+                /^Only 'mysql', 'postgresql', 'mariadb', 'oracle', 'mssql' are allowed as prodDatabaseType values for databaseType 'sql'\.$/
               );
             });
           });
@@ -217,14 +207,14 @@ describe('ApplicationValidator', () => {
               expect(() => {
                 checkApplication({
                   config: {
+                    ...basicValidApplication,
                     databaseType: MONGODB,
                     devDatabaseType: CASSANDRA,
                     prodDatabaseType: MONGODB
                   }
                 });
               }).to.throw(
-                "When the databaseType is either 'mongodb', 'couchbase', 'cassandra', the devDatabaseType and " +
-                  'prodDatabaseType must be the same.'
+                /^When the databaseType is either 'mongodb', 'couchbase', 'cassandra', the devDatabaseType and prodDatabaseType must be the same\.$/
               );
             });
           });
@@ -238,10 +228,7 @@ describe('ApplicationValidator', () => {
                     prodDatabaseType: CASSANDRA
                   }
                 });
-              }).to.throw(
-                "When the databaseType is either 'mongodb', 'couchbase', 'cassandra', the devDatabaseType and " +
-                  'prodDatabaseType must be the same.'
-              );
+              }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
             });
           });
         });
