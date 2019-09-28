@@ -206,25 +206,24 @@ describe('JDLObject', () => {
         it('fails', () => {
           expect(() => {
             object.addEntity(null);
-          }).to.throw('The entity must be valid in order to be added to the JDL object.\nErrors: No entity');
+          }).to.throw(/^Can't add invalid entity\. Error: No entity$/);
         });
       });
       context('such as an incomplete entity', () => {
-        expect(() => {
-          object.addEntity({
-            name: 'Something',
-            tableName: 't_something',
-            fields: [
-              {
-                type: 'String',
-                comment: 'comment',
-                validations: []
-              }
-            ]
+        let entity;
+
+        beforeEach(() => {
+          entity = new JDLEntity({
+            name: 'TSomething'
           });
-        }).to.throw(
-          'The entity must be valid in order to be added to the JDL object.\nErrors: For field #1: No field name'
-        );
+          delete entity.tableName;
+        });
+
+        it('should fail', () => {
+          expect(() => {
+            object.addEntity(entity);
+          }).to.throw(/^Can't add invalid entity\. Error: The entity attribute tableName was not found\.$/);
+        });
       });
     });
     context('when adding a valid entity', () => {

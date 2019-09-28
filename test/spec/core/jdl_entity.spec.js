@@ -79,53 +79,6 @@ describe('JDLEntity', () => {
       });
     });
   });
-  describe('::isValid', () => {
-    context('when checking the validity of an invalid object', () => {
-      context('because it is nil or invalid', () => {
-        it('returns false', () => {
-          expect(JDLEntity.isValid(null)).to.be.false;
-          expect(JDLEntity.isValid(undefined)).to.be.false;
-        });
-      });
-      context('without a name attribute', () => {
-        it('returns false', () => {
-          expect(JDLEntity.isValid({ tableName: 'Something', fields: [] })).to.be.false;
-        });
-      });
-      context('with a reserved keyword as name', () => {
-        it('returns false', () => {
-          expect(JDLEntity.isValid({ name: 'class' })).to.be.false;
-        });
-      });
-      context('without a table name', () => {
-        it('returns false', () => {
-          expect(JDLEntity.isValid({ name: 'Something', fields: [] })).to.be.false;
-        });
-      });
-      context('because its fields are invalid', () => {
-        it('returns false', () => {
-          expect(
-            JDLEntity.isValid({
-              name: 'Something',
-              tableName: 't_something',
-              fields: [
-                {
-                  type: 'String',
-                  comment: 'comment',
-                  validations: []
-                }
-              ]
-            })
-          ).to.be.false;
-        });
-      });
-    });
-    context('when checking the validity of a valid object', () => {
-      it('returns true', () => {
-        expect(JDLEntity.isValid({ name: 'Valid', tableName: 't_valid', fields: [] })).to.be.true;
-      });
-    });
-  });
   describe('#addField', () => {
     let entity = null;
 
