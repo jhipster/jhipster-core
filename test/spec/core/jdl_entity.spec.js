@@ -161,6 +161,50 @@ describe('JDLEntity', () => {
       });
     });
   });
+  describe('#forEachField', () => {
+    context('when not passing a function', () => {
+      let entity;
+
+      before(() => {
+        entity = new JDLEntity({
+          name: 'Toto'
+        });
+      });
+
+      it('should fail', () => {
+        expect(() => entity.forEachField()).to.throw();
+      });
+    });
+    context('when passing a function', () => {
+      let result;
+
+      before(() => {
+        const entity = new JDLEntity({
+          name: 'Toto'
+        });
+        entity.addField(
+          new JDLField({
+            name: 'a',
+            type: 'String'
+          })
+        );
+        entity.addField(
+          new JDLField({
+            name: 'b',
+            type: 'String'
+          })
+        );
+        result = '';
+        entity.forEachField(field => {
+          result += `${field.name}`;
+        });
+      });
+
+      it('should iterate over the fields', () => {
+        expect(result).to.equal('ab');
+      });
+    });
+  });
   describe('#toString', () => {
     context('without a comment', () => {
       let entity = null;

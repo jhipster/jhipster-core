@@ -161,6 +161,47 @@ describe('JDLField', () => {
       });
     });
   });
+  describe('#forEachValidation', () => {
+    context('when not passing a function', () => {
+      let field;
+
+      before(() => {
+        field = new JDLField({
+          name: 'toto',
+          type: 'String'
+        });
+      });
+
+      it('should fail', () => {
+        expect(() => field.forEachValidation()).to.throw();
+      });
+    });
+    context('when passing a function', () => {
+      let result;
+
+      before(() => {
+        const field = new JDLField({
+          name: 'toto',
+          type: 'String'
+        });
+        field.addValidation({
+          name: 'required'
+        });
+        field.addValidation({
+          name: 'min',
+          value: 0
+        });
+        result = '';
+        field.forEachValidation(validation => {
+          result += `${validation.name}`;
+        });
+      });
+
+      it('should iterate over the fields', () => {
+        expect(result).to.equal('requiredmin');
+      });
+    });
+  });
   describe('#toString', () => {
     context('without comment', () => {
       let args = {};
