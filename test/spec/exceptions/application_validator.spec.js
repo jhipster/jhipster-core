@@ -47,18 +47,18 @@ describe('ApplicationValidator', () => {
         };
       });
 
-      context('with unknown options', () => {
+      context('without the required options', () => {
         it('fails', () => {
           expect(() => {
             checkApplication({ config: { toto: 42 } });
           }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
         });
       });
-      context('with invalid values', () => {
-        it('fails', () => {
-          expect(() => {
-            checkApplication({ config: { devDatabaseType: 'nothing' } });
-          }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
+      context('with no chosen language', () => {
+        it('should fail', () => {
+          expect(() => checkApplication({ config: { ...basicValidApplication, enableTranslation: true } })).to.throw(
+            /^No chosen language\.$/
+          );
         });
       });
       context('with invalid test framework values', () => {
@@ -230,6 +230,57 @@ describe('ApplicationValidator', () => {
                 });
               }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
             });
+          });
+        });
+      });
+      context('with unknown options', () => {
+        it('should fail', () => {
+          expect(() => checkApplication({ config: { ...basicValidApplication, toto: 42 } })).to.throw(
+            /^Unknown application option 'toto'\.$/
+          );
+        });
+      });
+      context('with unknown values', () => {
+        context('because a boolean is expected', () => {
+          it('should fail', () => {
+            expect(() =>
+              checkApplication({ config: { ...basicValidApplication, enableTranslation: '42', nativeLanguage: 'fr' } })
+            ).to.throw(/^Expected a boolean value for option 'enableTranslation'$/);
+          });
+        });
+        context('because the value is unknown for a passed option', () => {
+          it('should fail', () => {
+            expect(() => checkApplication({ config: { ...basicValidApplication, clientFramework: 42 } })).to.throw(
+              /^Unknown value '42' for option 'clientFramework'\.$/
+            );
+          });
+        });
+        context('because the databaseType value is unknown', () => {
+          it('should fail', () => {
+            expect(() => checkApplication({ config: { ...basicValidApplication, databaseType: 'toto' } })).to.throw(
+              /^Unknown value 'toto' for option 'databaseType'\.$/
+            );
+          });
+        });
+        context('because the devDatabaseType value is unknown', () => {
+          it('should fail', () => {
+            expect(() =>
+              checkApplication({ config: { ...basicValidApplication, databaseType: 'sql', devDatabaseType: 'toto' } })
+            ).to.throw(/^Unknown value 'toto' for option 'devDatabaseType'\.$/);
+          });
+        });
+        context('because the prodDatabaseType value is unknown', () => {
+          it('should fail', () => {
+            expect(() =>
+              checkApplication({
+                config: {
+                  ...basicValidApplication,
+                  databaseType: 'sql',
+                  devDatabaseType: 'mysql',
+                  prodDatabaseType: 'toto'
+                }
+              })
+            ).to.throw(/^Unknown value 'toto' for option 'prodDatabaseType'\.$/);
           });
         });
       });
