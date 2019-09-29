@@ -90,15 +90,19 @@ describe('JDLEntity', () => {
     });
 
     context('when adding an invalid field', () => {
-      it('fails', () => {
-        expect(() => {
-          entity.addField(null);
-        }).to.throw(`The passed field '' must be valid to be added in entity '${entity.name}'.\nErrors: No field`);
-        expect(() => {
-          entity.addField({ name: 'myField' });
-        }).to.throw(
-          `The passed field 'myField' must be valid to be added in entity '${entity.name}'.\nErrors: No field type`
-        );
+      context('because it is nil', () => {
+        it('should fail', () => {
+          expect(() => {
+            entity.addField(null);
+          }).to.throw(/^Can't add invalid field\. Error: No field\.$/);
+        });
+      });
+      context('because it does not have a type', () => {
+        it('should fail', () => {
+          expect(() => {
+            entity.addField({ name: 'myField' });
+          }).to.throw(/^Can't add invalid field\. Error: The field attribute type was not found\.$/);
+        });
       });
     });
     context('when adding a valid field', () => {

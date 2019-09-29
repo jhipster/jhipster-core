@@ -76,51 +76,6 @@ describe('JDLField', () => {
       });
     });
   });
-  describe('::isValid', () => {
-    context('when checking the validity of an invalid object', () => {
-      context('because it is nil or undefined', () => {
-        it('returns false', () => {
-          expect(JDLField.isValid(null)).to.be.false;
-          expect(JDLField.isValid(undefined)).to.be.false;
-        });
-      });
-      context('without a name attribute', () => {
-        it('returns false', () => {
-          expect(JDLField.isValid({ type: 'String' })).to.be.false;
-        });
-      });
-      context('without a type attribute', () => {
-        it('returns false', () => {
-          expect(JDLField.isValid({ name: 'myField' })).to.be.false;
-        });
-      });
-      context('with a reserved keyword as name', () => {
-        it('returns false', () => {
-          expect(JDLField.isValid({ name: 'class', type: 'String' })).to.be.false;
-        });
-      });
-      context('because its validations are invalid', () => {
-        it('returns false', () => {
-          expect(
-            JDLField.isValid({
-              name: 'myField',
-              type: 'String',
-              validations: [
-                {
-                  value: 42
-                }
-              ]
-            })
-          ).to.be.false;
-        });
-      });
-    });
-    context('when checking the validity of a valid object', () => {
-      it('returns true', () => {
-        expect(JDLField.isValid({ name: 'myField', type: 'String' })).to.be.true;
-      });
-    });
-  });
   describe('#addValidation', () => {
     let field = null;
 
@@ -137,14 +92,14 @@ describe('JDLField', () => {
         it('fails', () => {
           expect(() => {
             field.addValidation(null);
-          }).to.throw('The passed validation must be valid to be added to the field.\nErrors: No validation');
+          }).to.throw(/^Can't add invalid validation\. Error: No validation\.$/);
         });
       });
       context('because there is no value where it should', () => {
         it('fails', () => {
           expect(() => {
             field.addValidation({ name: Validations.MIN });
-          }).to.throw("The passed validation 'min' must be valid to be added to the field.\nErrors: No value");
+          }).to.throw(/^Can't add invalid validation\. Error: The validation min requires a value\.$/);
         });
       });
     });
