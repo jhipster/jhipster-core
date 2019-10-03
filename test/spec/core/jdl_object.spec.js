@@ -106,7 +106,7 @@ describe('JDLObject', () => {
         it('fails', () => {
           expect(() => {
             object.addDeployment(null);
-          }).to.throw('The deployment must be valid in order to be added to the JDL object.\nErrors: No deployment');
+          }).to.throw(/^Can't add invalid deployment\. Error: No deployment\.$/);
         });
       });
       context('such as an incomplete deployment', () => {
@@ -116,8 +116,7 @@ describe('JDLObject', () => {
               directoryPath: '../'
             });
           }).to.throw(
-            'The deployment must be valid in order to be added to the JDL object.\n' +
-              'Errors: No deployment type, No applications, No Docker repository'
+            /^Can't add invalid deployment\. Error: The deployment attributes deploymentType, appsFolders, dockerRepositoryName were not found\.$/
           );
         });
       });
