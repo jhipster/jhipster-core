@@ -19,20 +19,28 @@
 
 /* eslint-disable no-new, no-unused-expressions */
 const { expect } = require('chai');
+
+const ApplicationValidator = require('../../../lib/exceptions/application_validator');
+
 const ApplicationOptions = require('../../../lib/core/jhipster/application_options');
 const { MONOLITH } = require('../../../lib/core/jhipster/application_types');
 const { SQL, MYSQL, POSTGRESQL, MONGODB, CASSANDRA, COUCHBASE } = require('../../../lib/core/jhipster/database_types');
-const { checkApplication } = require('../../../lib/exceptions/application_validator');
 
 describe('ApplicationValidator', () => {
-  describe('checkApplication', () => {
+  let validator;
+
+  before(() => {
+    validator = new ApplicationValidator();
+  });
+
+  describe('validate', () => {
     context('when not passing any application config', () => {
       it('fails', () => {
         expect(() => {
-          checkApplication();
+          validator.validate();
         }).to.throw(/^No application\.$/);
         expect(() => {
-          checkApplication({});
+          validator.validate({});
         }).to.throw(/^No application\.$/);
       });
     });
@@ -50,13 +58,13 @@ describe('ApplicationValidator', () => {
       context('without the required options', () => {
         it('fails', () => {
           expect(() => {
-            checkApplication({ config: { toto: 42 } });
-          }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
+            validator.validate({ config: { toto: 42 } });
+          }).to.throw(/^The application attributes baseName, authenticationType, buildTool were not found\.$/);
         });
       });
       context('with no chosen language', () => {
         it('should fail', () => {
-          expect(() => checkApplication({ config: { ...basicValidApplication, enableTranslation: true } })).to.throw(
+          expect(() => validator.validate({ config: { ...basicValidApplication, enableTranslation: true } })).to.throw(
             /^No chosen language\.$/
           );
         });
@@ -64,7 +72,7 @@ describe('ApplicationValidator', () => {
       context('with invalid test framework values', () => {
         it('fails', () => {
           expect(() => {
-            checkApplication({
+            validator.validate({
               config: {
                 ...basicValidApplication,
                 testFrameworks: ['nothing']
@@ -77,7 +85,7 @@ describe('ApplicationValidator', () => {
         context('mysql', () => {
           it('does not fail', () => {
             expect(() => {
-              checkApplication({
+              validator.validate({
                 config: {
                   ...basicValidApplication,
                   databaseType: SQL,
@@ -92,7 +100,7 @@ describe('ApplicationValidator', () => {
         context('postgresql', () => {
           it('does not fail', () => {
             expect(() => {
-              checkApplication({
+              validator.validate({
                 config: {
                   ...basicValidApplication,
                   databaseType: SQL,
@@ -107,7 +115,7 @@ describe('ApplicationValidator', () => {
         context('mongodb', () => {
           it('does not fail', () => {
             expect(() => {
-              checkApplication({
+              validator.validate({
                 config: {
                   ...basicValidApplication,
                   databaseType: MONGODB,
@@ -122,7 +130,7 @@ describe('ApplicationValidator', () => {
         context('cassandra', () => {
           it('does not fail', () => {
             expect(() => {
-              checkApplication({
+              validator.validate({
                 config: {
                   ...basicValidApplication,
                   databaseType: CASSANDRA,
@@ -137,7 +145,7 @@ describe('ApplicationValidator', () => {
         context('couchbase', () => {
           it('does not fail', () => {
             expect(() => {
-              checkApplication({
+              validator.validate({
                 config: {
                   ...basicValidApplication,
                   databaseType: COUCHBASE,
@@ -155,7 +163,7 @@ describe('ApplicationValidator', () => {
           context('with an invalid prodDatabaseType', () => {
             it('fails', () => {
               expect(() => {
-                checkApplication({
+                validator.validate({
                   config: {
                     ...basicValidApplication,
                     databaseType: SQL,
@@ -171,7 +179,7 @@ describe('ApplicationValidator', () => {
           context('with an invalid devDatabaseType', () => {
             it('fails', () => {
               expect(() => {
-                checkApplication({
+                validator.validate({
                   config: {
                     ...basicValidApplication,
                     databaseType: SQL,
@@ -187,7 +195,7 @@ describe('ApplicationValidator', () => {
           context('with both devDatabaseType and prodDatabaseType as invalid values', () => {
             it('fails', () => {
               expect(() => {
-                checkApplication({
+                validator.validate({
                   config: {
                     ...basicValidApplication,
                     databaseType: SQL,
@@ -205,7 +213,7 @@ describe('ApplicationValidator', () => {
           context('when the devDatabaseType is not the same as the databaseType', () => {
             it('fails', () => {
               expect(() => {
-                checkApplication({
+                validator.validate({
                   config: {
                     ...basicValidApplication,
                     databaseType: MONGODB,
@@ -221,21 +229,21 @@ describe('ApplicationValidator', () => {
           context('when the prodDatabaseType is not the same as the databaseType', () => {
             it('fails', () => {
               expect(() => {
-                checkApplication({
+                validator.validate({
                   config: {
                     databaseType: MONGODB,
                     devDatabaseType: MONGODB,
                     prodDatabaseType: CASSANDRA
                   }
                 });
-              }).to.throw(/^The application options baseName, authenticationType, buildTool were not found\.$/);
+              }).to.throw(/^The application attributes baseName, authenticationType, buildTool were not found\.$/);
             });
           });
         });
       });
       context('with unknown options', () => {
         it('should fail', () => {
-          expect(() => checkApplication({ config: { ...basicValidApplication, toto: 42 } })).to.throw(
+          expect(() => validator.validate({ config: { ...basicValidApplication, toto: 42 } })).to.throw(
             /^Unknown application option 'toto'\.$/
           );
         });
@@ -244,20 +252,22 @@ describe('ApplicationValidator', () => {
         context('because a boolean is expected', () => {
           it('should fail', () => {
             expect(() =>
-              checkApplication({ config: { ...basicValidApplication, enableTranslation: '42', nativeLanguage: 'fr' } })
+              validator.validate({
+                config: { ...basicValidApplication, enableTranslation: '42', nativeLanguage: 'fr' }
+              })
             ).to.throw(/^Expected a boolean value for option 'enableTranslation'$/);
           });
         });
         context('because the value is unknown for a passed option', () => {
           it('should fail', () => {
-            expect(() => checkApplication({ config: { ...basicValidApplication, clientFramework: 42 } })).to.throw(
+            expect(() => validator.validate({ config: { ...basicValidApplication, clientFramework: 42 } })).to.throw(
               /^Unknown value '42' for option 'clientFramework'\.$/
             );
           });
         });
         context('because the databaseType value is unknown', () => {
           it('should fail', () => {
-            expect(() => checkApplication({ config: { ...basicValidApplication, databaseType: 'toto' } })).to.throw(
+            expect(() => validator.validate({ config: { ...basicValidApplication, databaseType: 'toto' } })).to.throw(
               /^Unknown value 'toto' for option 'databaseType'\.$/
             );
           });
@@ -265,14 +275,14 @@ describe('ApplicationValidator', () => {
         context('because the devDatabaseType value is unknown', () => {
           it('should fail', () => {
             expect(() =>
-              checkApplication({ config: { ...basicValidApplication, databaseType: 'sql', devDatabaseType: 'toto' } })
+              validator.validate({ config: { ...basicValidApplication, databaseType: 'sql', devDatabaseType: 'toto' } })
             ).to.throw(/^Unknown value 'toto' for option 'devDatabaseType'\.$/);
           });
         });
         context('because the prodDatabaseType value is unknown', () => {
           it('should fail', () => {
             expect(() =>
-              checkApplication({
+              validator.validate({
                 config: {
                   ...basicValidApplication,
                   databaseType: 'sql',

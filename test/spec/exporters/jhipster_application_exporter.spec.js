@@ -42,7 +42,7 @@ describe('JHipsterApplicationExporter', () => {
               config: {}
             });
           }).to.throw(
-            /^Can't export invalid application\. Error: The application options baseName, authenticationType, buildTool were not found\.$/
+            /^Can't export invalid application\. Error: The application attributes baseName, authenticationType, buildTool were not found\.$/
           );
         });
       });

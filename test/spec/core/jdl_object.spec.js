@@ -55,7 +55,7 @@ describe('JDLObject', () => {
               }
             });
           }).to.throw(
-            /Can't add invalid application\. Error: The application options authenticationType, buildTool were not found\./
+            /Can't add invalid application\. Error: The application attributes authenticationType, buildTool were not found\./
           );
         });
       });
@@ -205,7 +205,7 @@ describe('JDLObject', () => {
         it('fails', () => {
           expect(() => {
             object.addEntity(null);
-          }).to.throw(/^Can't add invalid entity\. Error: No entity$/);
+          }).to.throw(/^Can't add invalid entity\. Error: No entity\.$/);
         });
       });
       context('such as an incomplete entity', () => {

@@ -2,20 +2,26 @@ const { expect } = require('chai');
 const JDLEntity = require('../../../lib/core/jdl_entity');
 const JDLField = require('../../../lib/core/jdl_field');
 const JDLValidation = require('../../../lib/core/jdl_validation');
-const { checkEntity } = require('../../../lib/exceptions/entity_validator');
+const EntityValidator = require('../../../lib/exceptions/entity_validator');
 
 describe('EntityValidator', () => {
-  describe('checkEntity', () => {
+  let validator;
+
+  before(() => {
+    validator = new EntityValidator();
+  });
+
+  describe('validate', () => {
     context('when not passing an entity', () => {
       it('should fail', () => {
-        expect(() => checkEntity()).to.throw(/^No entity$/);
+        expect(() => validator.validate()).to.throw(/^No entity\.$/);
       });
     });
     context('when passing an entity', () => {
       context('with every required attribute', () => {
         it('should not fail', () => {
           expect(() =>
-            checkEntity(
+            validator.validate(
               new JDLEntity({
                 name: 'A'
               })
@@ -25,7 +31,16 @@ describe('EntityValidator', () => {
       });
       context('without any attribute', () => {
         it('should fail', () => {
-          expect(() => checkEntity({})).to.throw(/^The entity attributes name,tableName,fields were not found\.$/);
+          expect(() => validator.validate({})).to.throw(/^The entity attributes name, tableName were not found\.$/);
+        });
+      });
+      context('without fields', () => {
+        it('should fail', () => {
+          it('should fail', () => {
+            expect(() => validator.validate({ name: 'A', tableName: 'a' })).to.throw(
+              /^The entity attributes name, tableName were not found\.$/
+            );
+          });
         });
       });
       context('with fields', () => {
@@ -49,7 +64,7 @@ describe('EntityValidator', () => {
           });
 
           it('should not fail', () => {
-            expect(() => checkEntity(entity)).not.to.throw();
+            expect(() => validator.validate(entity)).not.to.throw();
           });
         });
         context('when there are not valid', () => {
@@ -69,7 +84,7 @@ describe('EntityValidator', () => {
             });
 
             it('should fail', () => {
-              expect(() => checkEntity(entity)).to.throw(/^Entity A,\n\tNo field\.$/);
+              expect(() => validator.validate(entity)).to.throw(/^Entity A,\n\tNo field\.$/);
             });
           });
           context('because there is an error in the field', () => {
@@ -88,7 +103,9 @@ describe('EntityValidator', () => {
             });
 
             it('should fail', () => {
-              expect(() => checkEntity(entity)).to.throw(/^Entity A,\n\tThe field attribute type was not found\.$/);
+              expect(() => validator.validate(entity)).to.throw(
+                /^Entity A,\n\tThe field attribute type was not found\.$/
+              );
             });
           });
           context('because there is an error in the validation', () => {
@@ -112,7 +129,7 @@ describe('EntityValidator', () => {
             });
 
             it('should fail', () => {
-              expect(() => checkEntity(entity)).to.throw(
+              expect(() => validator.validate(entity)).to.throw(
                 /^Entity A,\n\tField aa, \n\tThe validation min requires a value\.$/
               );
             });

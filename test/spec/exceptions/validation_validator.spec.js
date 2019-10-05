@@ -1,23 +1,29 @@
 const { expect } = require('chai');
 const JDLValidation = require('../../../lib/core/jdl_validation');
-const { checkValidation } = require('../../../lib/exceptions/validation_validator');
+const ValidationValidator = require('../../../lib/exceptions/validation_validator');
 
 describe('ValidationValidator', () => {
-  describe('checkValidation', () => {
+  let validator;
+
+  before(() => {
+    validator = new ValidationValidator();
+  });
+
+  describe('validate', () => {
     context('when not passing anything', () => {
       it('should fail', () => {
-        expect(() => checkValidation()).to.throw(/^No validation\.$/);
+        expect(() => validator.validate()).to.throw(/^No validation\.$/);
       });
     });
     context('when passing a validation', () => {
       context('with all its required attributes', () => {
         it('should not fail', () => {
-          expect(() => checkValidation({ name: 'required' })).not.to.throw();
+          expect(() => validator.validate({ name: 'required' })).not.to.throw();
         });
       });
       context('without any of its required attributes', () => {
         it('should fail', () => {
-          expect(() => checkValidation({})).to.throw(/^The validation name was not found\.$/);
+          expect(() => validator.validate({})).to.throw(/^The validation attribute name was not found\.$/);
         });
       });
       context('when passing an invalid name for a validation', () => {
@@ -32,7 +38,7 @@ describe('ValidationValidator', () => {
         });
 
         it('should fail', () => {
-          expect(() => checkValidation(validation)).to.throw(/^The validation toto doesn't exist\.$/);
+          expect(() => validator.validate(validation)).to.throw(/^The validation toto doesn't exist\.$/);
         });
       });
       context('when not passing a value when required', () => {
@@ -47,7 +53,7 @@ describe('ValidationValidator', () => {
         });
 
         it('should fail', () => {
-          expect(() => checkValidation(validation)).to.throw(/^The validation min requires a value\.$/);
+          expect(() => validator.validate(validation)).to.throw(/^The validation min requires a value\.$/);
         });
       });
     });

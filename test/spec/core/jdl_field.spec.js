@@ -20,6 +20,7 @@
 /* eslint-disable no-new, no-unused-expressions */
 const { expect } = require('chai');
 
+const { matchField } = require('../../matchers/field_matcher');
 const JDLField = require('../../../lib/core/jdl_field');
 const JDLValidation = require('../../../lib/core/jdl_validation');
 const Validations = require('../../../lib/core/jhipster/validations');
@@ -62,10 +63,7 @@ describe('JDLField', () => {
       });
 
       it('creates a new instance', () => {
-        expect(field.name).to.eq(args.name);
-        expect(field.type).to.eq(args.type);
-        expect(field.comment).to.eq(args.comment);
-        expect(field.validations).to.deep.eq(args.validations);
+        expect(field).to.satisfy(matchField);
       });
     });
     context('when passing a reserved keyword as name', () => {
@@ -112,7 +110,10 @@ describe('JDLField', () => {
       });
 
       it('works', () => {
-        expect(field.validations).to.deep.eq({ min: validation });
+        field.forEachValidation(validation => {
+          expect(validation.name).to.equal(Validations.MIN);
+          expect(validation.value).to.equal(42);
+        });
       });
     });
   });
