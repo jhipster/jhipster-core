@@ -676,30 +676,14 @@ describe('JDLObject', () => {
         it('fails', () => {
           expect(() => {
             object.addOption(null);
-          }).to.throw('The option must be valid in order to be added to the JDL object.\nErrors: No option');
+          }).to.throw(/^Can't add nil option\.$/);
         });
       });
       context('such as an empty object', () => {
         it('fails', () => {
           expect(() => {
             object.addOption({});
-          }).to.throw(
-            'The option must be valid in order to be added to the JDL object.\n' +
-              'Errors: No option name, No entity names, No excluded names, No type'
-          );
-        });
-      });
-      context('such as a wrong option/value', () => {
-        it('fails', () => {
-          expect(() => {
-            object.addOption({
-              name: UnaryOptions.SKIP_CLIENT,
-              type: 'WrongType'
-            });
-          }).to.throw(
-            'The option must be valid in order to be added to the JDL object.\n' +
-              'Errors: No entity names, No excluded names, No type'
-          );
+          }).to.throw(/^Can't add nil option\.$/);
         });
       });
     });

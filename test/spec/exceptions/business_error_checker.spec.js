@@ -23,7 +23,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
 chai.use(sinonChai);
-const expect = chai.expect;
+const { expect } = chai;
 
 const BusinessErrorChecker = require('../../../lib/exceptions/business_error_checker');
 const ApplicationTypes = require('../../../lib/core/jhipster/application_types');
@@ -838,40 +838,6 @@ describe('BusinessErrorChecker', () => {
             checker.checkForOptionErrors();
           }).to.throw("Pagination isn't allowed when the app uses Cassandra.");
         });
-      });
-    });
-    context('when not passing a value for a binary option', () => {
-      before(() => {
-        const option = new JDLBinaryOption({
-          name: BinaryOptions.Options.PAGINATION,
-          value: BinaryOptions.Values.pagination.PAGER
-        });
-        option.value = '';
-        jdlObject.addOption(option);
-        checker = new BusinessErrorChecker(jdlObject);
-      });
-
-      it('fails', () => {
-        expect(() => {
-          checker.checkForOptionErrors();
-        }).to.throw("The 'pagination' option needs a value.");
-      });
-    });
-    context('when not passing a valid value for a binary option', () => {
-      before(() => {
-        const option = new JDLBinaryOption({
-          name: BinaryOptions.Options.PAGINATION,
-          value: BinaryOptions.Values.pagination.PAGER
-        });
-        option.value = BinaryOptions.Values.dto.MAPSTRUCT;
-        jdlObject.addOption(option);
-        checker = new BusinessErrorChecker(jdlObject, { databaseType: DatabaseTypes.CASSANDRA });
-      });
-
-      it('fails', () => {
-        expect(() => {
-          checker.checkForOptionErrors();
-        }).to.throw("The 'pagination' option is not valid for value 'mapstruct'.");
       });
     });
     context('when having DTOs without services', () => {
