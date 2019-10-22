@@ -382,14 +382,14 @@ describe('JDLObject', () => {
         it('fails', () => {
           expect(() => {
             object.addEnum(null);
-          }).to.throw('The enum must be valid in order to be added to the JDL object.\nErrors: No enumeration');
+          }).to.throw(/^Can't add invalid enum\. Error: No enum\.$/);
         });
       });
       context('such as an incomplete enum', () => {
         it('fails', () => {
           expect(() => {
             object.addEnum({ values: ['A', 'B'] });
-          }).to.throw('The enum must be valid in order to be added to the JDL object.\nErrors: No enumeration name');
+          }).to.throw(/^Can't add invalid enum\. Error: The enum attribute name was not found\.$/);
         });
       });
     });

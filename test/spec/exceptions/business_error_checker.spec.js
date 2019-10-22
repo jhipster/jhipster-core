@@ -749,34 +749,6 @@ describe('BusinessErrorChecker', () => {
       });
     });
   });
-  describe('#checkForEnumErrors', () => {
-    let checker = null;
-    let jdlObject = null;
-
-    before(() => {
-      jdlObject = new JDLObject();
-    });
-    afterEach(() => {
-      jdlObject = new JDLObject();
-    });
-
-    context('when having a reserved name as class name', () => {
-      before(() => {
-        jdlObject.addEnum(
-          new JDLEnum({
-            name: 'Catch'
-          })
-        );
-        checker = new BusinessErrorChecker(jdlObject);
-      });
-
-      it('fails', () => {
-        expect(() => {
-          checker.checkForEnumErrors();
-        }).to.throw("The enum name 'Catch' is reserved keyword and can not be used as enum class name.");
-      });
-    });
-  });
   describe('#checkForOptionErrors', () => {
     let checker = null;
     let jdlObject = null;
