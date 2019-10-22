@@ -113,10 +113,10 @@ describe('DocumentParser', () => {
               comment: 'JobHistory comment.'
             })
           );
-          expect(jdlObject.getEnum('JobType')).to.deep.eq(
+          expect(jdlObject.getEnum('JobType')).to.deep.equal(
             new JDLEnum({
               name: 'JobType',
-              values: ['TYPE1', 'TYPE2']
+              values: [{ key: 'TYPE1' }, { key: 'TYPE2' }]
             })
           );
           expect(jdlObject.entities.Job).to.deep.eq(
@@ -295,7 +295,7 @@ describe('DocumentParser', () => {
           expect(jdlObject.getEnum('MyEnum')).to.deep.eq(
             new JDLEnum({
               name: 'MyEnum',
-              values: ['AAA', 'BBB', 'CCC']
+              values: [{ key: 'AAA' }, { key: 'BBB' }, { key: 'CCC' }]
             })
           );
           expect(jdlObject.entities.MyEntity.fields.sourceType).to.deep.eq(enumField);
@@ -813,7 +813,7 @@ describe('DocumentParser', () => {
         });
 
         it('sets it', () => {
-          expect(jdlObject.relationships.getOneToOne('OneToOne_A{b}_B').options.useJPADerivedIdentifier).to.be.true;
+          expect(jdlObject.relationships.getOneToOne('OneToOne_A{b}_B').options.jpaDerivedIdentifier).to.be.true;
         });
       });
     });
