@@ -31,7 +31,6 @@ const BinaryOptions = require('../../../lib/core/jhipster/binary_options');
 const DatabaseTypes = require('../../../lib/core/jhipster/database_types');
 const FieldTypes = require('../../../lib/core/jhipster/field_types');
 const RelationshipTypes = require('../../../lib/core/jhipster/relationship_types');
-const RelationshipOptions = require('../../../lib/core/jhipster/relationship_options');
 const UnaryOptions = require('../../../lib/core/jhipster/unary_options');
 const Validations = require('../../../lib/core/jhipster/validations');
 const JDLObject = require('../../../lib/core/jdl_object');
@@ -591,60 +590,6 @@ describe('BusinessErrorChecker', () => {
         });
       });
     });
-    context('when having required relationships from and to the same entity', () => {
-      context('for the source entity', () => {
-        let checker;
-
-        before(() => {
-          const entity = new JDLEntity({
-            name: 'A'
-          });
-          const relationship = new JDLRelationship({
-            from: entity.name,
-            to: entity.name,
-            type: RelationshipTypes.ONE_TO_MANY,
-            injectedFieldInFrom: 'a',
-            isInjectedFieldInFromRequired: true
-          });
-          const jdlObject = new JDLObject();
-          jdlObject.addEntity(entity);
-          jdlObject.addRelationship(relationship);
-          checker = new BusinessErrorChecker(jdlObject);
-        });
-
-        it('fails', () => {
-          expect(() => {
-            checker.checkForRelationshipErrors();
-          }).to.throw("Required relationships to the same entity are not supported, for relationship from 'A' to 'A'.");
-        });
-      });
-      context('for the source entity', () => {
-        let checker;
-
-        before(() => {
-          const entity = new JDLEntity({
-            name: 'A'
-          });
-          const relationship = new JDLRelationship({
-            from: entity.name,
-            to: entity.name,
-            type: RelationshipTypes.ONE_TO_MANY,
-            injectedFieldInFrom: 'a',
-            isInjectedFieldInToRequired: true
-          });
-          const jdlObject = new JDLObject();
-          jdlObject.addEntity(entity);
-          jdlObject.addRelationship(relationship);
-          checker = new BusinessErrorChecker(jdlObject);
-        });
-
-        it('fails', () => {
-          expect(() => {
-            checker.checkForRelationshipErrors();
-          }).to.throw("Required relationships to the same entity are not supported, for relationship from 'A' to 'A'.");
-        });
-      });
-    });
     context('with relationships between multiple entities', () => {
       let checker;
 
@@ -695,7 +640,8 @@ describe('BusinessErrorChecker', () => {
             from: 'A',
             to: 'B',
             type: RelationshipTypes.MANY_TO_MANY,
-            injectedFieldInFrom: 'b'
+            injectedFieldInFrom: 'b',
+            injectedFieldInTo: 'a'
           })
         );
         jdlObject.addRelationship(
@@ -703,7 +649,8 @@ describe('BusinessErrorChecker', () => {
             from: 'B',
             to: 'C',
             type: RelationshipTypes.MANY_TO_MANY,
-            injectedFieldInFrom: 'c'
+            injectedFieldInFrom: 'c',
+            injectedFieldInTo: 'd'
           })
         );
         jdlObject.addRelationship(
@@ -711,7 +658,8 @@ describe('BusinessErrorChecker', () => {
             from: 'A',
             to: 'C',
             type: RelationshipTypes.MANY_TO_MANY,
-            injectedFieldInFrom: 'c'
+            injectedFieldInFrom: 'c',
+            injectedFieldInTo: 'd'
           })
         );
         checker = new BusinessErrorChecker(jdlObject);
@@ -719,33 +667,7 @@ describe('BusinessErrorChecker', () => {
       it('fails', () => {
         expect(() => {
           checker.checkForRelationshipErrors();
-        }).to.throw(
-          "Entities for the ManyToMany relationship from 'B' to 'C' do not belong to the same application." +
-            "\nEntities for the ManyToMany relationship from 'A' to 'C' do not belong to the same application."
-        );
-      });
-    });
-    context('when having the jpaDerivedIdentifier option with something else than a OtO relationship', () => {
-      let checker;
-
-      before(() => {
-        const relationship = new JDLRelationship({
-          from: 'A',
-          to: 'B',
-          injectedFieldInTo: 'a',
-          type: RelationshipTypes.MANY_TO_ONE,
-          options: { [RelationshipOptions.JPA_DERIVED_IDENTIFIER]: true }
-        });
-        const jdlObject = new JDLObject();
-
-        jdlObject.addRelationship(relationship);
-        checker = new BusinessErrorChecker(jdlObject);
-      });
-
-      it('fails', () => {
-        expect(() => checker.checkForRelationshipErrors()).to.throw(
-          "Only a One to One relationship can have the 'jpaDerivedIdentifier' option."
-        );
+        }).to.throw("Entities for the ManyToMany relationship from 'B' to 'C' do not belong to the same application.");
       });
     });
   });

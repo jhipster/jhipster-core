@@ -252,7 +252,7 @@ describe('DocumentParser', () => {
         });
 
         it('is processed', () => {
-          expect(jdlObject.relationships.getManyToOne('ManyToOne_A{user}_User{a}').to).to.eq('User');
+          expect(jdlObject.relationships.getManyToOne('ManyToOne_A{user}_User').to).to.eq('User');
           expect(jdlObject.relationships.getOneToOne('OneToOne_B{user}_User').to).to.eq('User');
         });
       });

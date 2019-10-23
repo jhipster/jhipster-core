@@ -538,9 +538,7 @@ describe('JDLObject', () => {
         it('fails', () => {
           expect(() => {
             object.addRelationship(null);
-          }).to.throw(
-            'The relationship must be valid in order to be added to the JDL object.\nErrors: No relationship'
-          );
+          }).to.throw(/^Can't add invalid relationship\. Error: No relationship\.$/);
         });
       });
       context('such as an incomplete relationship', () => {
@@ -567,7 +565,8 @@ describe('JDLObject', () => {
           from: 'Valid2',
           to: 'Valid',
           type: RelationshipTypes.MANY_TO_MANY,
-          injectedFieldInFrom: 'something'
+          injectedFieldInFrom: 'something',
+          injectedFieldInTo: 'somethingElse'
         });
         object.addRelationship(relationship);
       });
@@ -585,7 +584,8 @@ describe('JDLObject', () => {
           from: 'Valid2',
           to: 'Valid',
           type: RelationshipTypes.MANY_TO_MANY,
-          injectedFieldInFrom: 'something'
+          injectedFieldInFrom: 'something',
+          injectedFieldInTo: 'somethingElse'
         });
         object.addRelationship(relationship);
         object.addRelationship(relationship);
