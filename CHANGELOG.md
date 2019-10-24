@@ -4,6 +4,8 @@
   - **JDLImporter**:
     - Previously, it was a class that could be instanciated from either JDL files or string, and a configuration object.
     - Now, in order to create a JDL importer, one must use createImporterFromContent or createImporterFromFiles.
+  - **JDL(entity, field, enum, etc.):**
+    - Removed validity check methods and moved them to the BusinessErrorChecker or their own validators.
 
 ## What's new
   - Passing a path to the `clientRootFolder` is now possible
@@ -12,7 +14,7 @@
   enum Language {
     FRENCH (frenchy),
     ICELANDIC (viking)
-  }
+  }t pul
   ```
 
 ## Fixed
