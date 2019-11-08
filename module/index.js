@@ -61,7 +61,6 @@ const { convertToJDL } = require('../lib/converters/json_to_jdl_converter');
 const ReservedKeywords = require('../lib/core/jhipster/reserved_keywords');
 const FileUtils = require('../lib/utils/file_utils');
 const ObjectUtils = require('../lib/utils/object_utils');
-const FormatUtils = require('../lib/utils/format_utils');
 const StringUtils = require('../lib/utils/string_utils');
 
 const newAPI = require('./new_index');
@@ -134,6 +133,5 @@ module.exports = {
   toFilePath: JSONFileReader.toFilePath,
   /* Utils */
   FileUtils,
-  camelCase: StringUtils.camelCase,
-  dateFormatForLiquibase: FormatUtils.dateFormatForLiquibase
+  camelCase: StringUtils.camelCase
 };
