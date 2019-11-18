@@ -257,7 +257,7 @@ describe('JSONToJDLEntityConverter', () => {
                 name: UnaryOptions.SKIP_USER_MANAGEMENT
               })
             );
-            jdlObject = convertEntitiesToJDL({ entities, jdl: jdlObject });
+            jdlObject = convertEntitiesToJDL({ entities, jdlObject });
           });
 
           it('parses the User.json entity if skipUserManagement flag is set', () => {
