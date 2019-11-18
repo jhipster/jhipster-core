@@ -251,7 +251,7 @@ describe('JSONToJDLEntityConverter', () => {
           });
         });
         context('when skipUserManagement flag is set', () => {
-          let jdlObject = null;
+          let jdlObject;
 
           before(() => {
             const regionEntity = readJsonEntity('Region');
@@ -260,13 +260,7 @@ describe('JSONToJDLEntityConverter', () => {
               ['Country', readJsonEntity('Country')],
               ['User', regionEntity]
             ]);
-            jdlObject = new ValidatedJDLObject();
-            jdlObject.addOption(
-              new JDLUnaryOption({
-                name: UnaryOptions.SKIP_USER_MANAGEMENT
-              })
-            );
-            jdlObject = convertEntitiesToJDL({ entities, jdlObject });
+            jdlObject = convertEntitiesToJDL({ entities, skippedUserManagement: true });
           });
 
           it('parses the User.json entity if skipUserManagement flag is set', () => {
