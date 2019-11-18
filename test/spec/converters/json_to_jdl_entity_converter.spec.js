@@ -48,17 +48,23 @@ describe('JSONToJDLEntityConverter', () => {
       let jdlObject = null;
 
       before(() => {
-        const entities = {
-          Employee: readJsonEntity('Employee'),
-          Country: readJsonEntity('Country'),
-          Department: readJsonEntity('Department'),
-          JobHistory: readJsonEntity('JobHistory'),
-          Location: readJsonEntity('Location'),
-          Region: readJsonEntity('Region'),
-          Job: readJsonEntity('Job'),
-          Task: readJsonEntity('Task')
-        };
-        entities.Employee.relationships.filter(r => r.relationshipName === 'department')[0].javadoc = undefined;
+        const entities = new Map([
+          ['Employee', readJsonEntity('Employee')],
+          ['Country', readJsonEntity('Country')],
+          ['Department', readJsonEntity('Department')],
+          ['JobHistory', readJsonEntity('JobHistory')],
+          ['Location', readJsonEntity('Location')],
+          ['Region', readJsonEntity('Region')],
+          ['Job', readJsonEntity('Job')],
+          ['Task', readJsonEntity('Task')]
+        ]);
+        // const employeeRelationshipToDepartment = entities
+        //   .get('Employee')
+        //   .relationships.filter(r => r.relationshipName === 'department')[0];
+        // employeeRelationshipToDepartment.javadoc = undefined
+        // const employee = entities.get('Employee');
+        // employee.relationships = employeeRelationships;
+        // entities.set('Employee', employee);
         jdlObject = convertEntitiesToJDL({ entities });
       });
 
@@ -184,19 +190,18 @@ describe('JSONToJDLEntityConverter', () => {
             'OneToMany_Department{employee}_Employee{department(foo)}'
           );
           expect(relationship.commentInFrom).to.eq('A relationship');
-          expect(relationship.commentInTo).to.be.undefined;
+          expect(relationship.commentInTo).to.equal('Another side of the same relationship');
         });
         it('parses comments in relationships for owned', () => {
-          const entities = {
-            Department: readJsonEntity('Department'),
-            Employee: readJsonEntity('Employee')
-          };
-          entities.Department.relationships.filter(r => r.relationshipName === 'employee')[0].javadoc = undefined;
+          const entities = new Map([
+            ['Department', readJsonEntity('Department')],
+            ['Employee', readJsonEntity('Employee')]
+          ]);
           const jdlObject = convertEntitiesToJDL({ entities });
           const relationship = jdlObject.relationships.getOneToMany(
             'OneToMany_Department{employee}_Employee{department(foo)}'
           );
-          expect(relationship.commentInFrom).to.be.undefined;
+          expect(relationship.commentInFrom).to.equal('A relationship');
           expect(relationship.commentInTo).to.eq('Another side of the same relationship');
         });
         it('parses required relationships in owner', () => {
@@ -219,10 +224,7 @@ describe('JSONToJDLEntityConverter', () => {
             let jdlObject = null;
 
             before(() => {
-              const entities = {
-                Country: readJsonEntity('Country')
-              };
-              jdlObject = convertEntitiesToJDL({ entities });
+              jdlObject = convertEntitiesToJDL({ entities: new Map([['Country', readJsonEntity('Country')]]) });
             });
 
             it('parses relationships to the JHipster managed User entity', () => {
@@ -230,13 +232,19 @@ describe('JSONToJDLEntityConverter', () => {
             });
           });
           context('when there is a User.json entity', () => {
+            let entities;
+
+            before(() => {
+              entities = new Map([
+                ['Country', readJsonEntity('Country')],
+                ['User', readJsonEntity('Region')]
+              ]);
+            });
+
             it('throws an error ', () => {
               expect(() => {
                 convertEntitiesToJDL({
-                  entities: {
-                    Country: readJsonEntity('Country'),
-                    User: readJsonEntity('Region')
-                  }
+                  entities
                 });
               }).to.throw('User entity name is reserved if skipUserManagement is not set.');
             });
@@ -246,11 +254,12 @@ describe('JSONToJDLEntityConverter', () => {
           let jdlObject = null;
 
           before(() => {
-            const entities = {
-              Country: readJsonEntity('Country'),
-              User: readJsonEntity('Region')
-            };
-            entities.User.relationships[0].otherEntityRelationshipName = 'user';
+            const regionEntity = readJsonEntity('Region');
+            regionEntity.relationships[0].otherEntityRelationshipName = 'user';
+            const entities = new Map([
+              ['Country', readJsonEntity('Country')],
+              ['User', regionEntity]
+            ]);
             jdlObject = new ValidatedJDLObject();
             jdlObject.addOption(
               new JDLUnaryOption({
@@ -271,10 +280,9 @@ describe('JSONToJDLEntityConverter', () => {
           let jdlObject = null;
 
           before(() => {
-            const entities = {
-              CassBankAccount: readJsonEntity('CassBankAccount')
-            };
-            jdlObject = convertEntitiesToJDL({ entities });
+            jdlObject = convertEntitiesToJDL({
+              entities: new Map([['CassBankAccount', readJsonEntity('CassBankAccount')]])
+            });
           });
 
           it('parses tableName', () => {
@@ -296,14 +304,10 @@ describe('JSONToJDLEntityConverter', () => {
       });
 
       context('when parsing an unrecognised blob-typed field', () => {
-        let entity;
-
-        before(() => {
-          entity = readJsonEntity('InvalidBlobType');
-        });
-
         it('fails', () => {
-          expect(() => convertEntitiesToJDL({ entities: [entity] })).to.throw("Unrecognised blob type: 'unknown'");
+          expect(() =>
+            convertEntitiesToJDL({ entities: new Map([['InvalidBlobType', readJsonEntity('InvalidBlobType')]]) })
+          ).to.throw("Unrecognised blob type: 'unknown'");
         });
       });
     });
@@ -311,16 +315,19 @@ describe('JSONToJDLEntityConverter', () => {
       let entities;
 
       before(() => {
-        entities = {
-          TestEntity: JSON.parse(
-            fs
-              .readFileSync(
-                path.join('test', 'test_files', 'json_to_jdl_converter', 'with_user', '.jhipster', 'TestEntity.json'),
-                'utf-8'
-              )
-              .toString()
-          )
-        };
+        entities = new Map([
+          [
+            'TestEntity',
+            JSON.parse(
+              fs
+                .readFileSync(
+                  path.join('test', 'test_files', 'json_to_jdl_converter', 'with_user', '.jhipster', 'TestEntity.json'),
+                  'utf-8'
+                )
+                .toString()
+            )
+          ]
+        ]);
       });
 
       it('should not fail', () => {
