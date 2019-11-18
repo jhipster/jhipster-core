@@ -41,7 +41,7 @@ describe('JSONToJDLEntityConverter', () => {
   describe('::convertEntitiesToJDL', () => {
     context('when not passing entities', () => {
       it('fails', () => {
-        expect(() => convertEntitiesToJDL()).to.throw('Entities have to be passed to be converted.');
+        expect(() => convertEntitiesToJDL({})).to.throw('Entities have to be passed to be converted.');
       });
     });
     context('when passing entities', () => {
@@ -59,7 +59,7 @@ describe('JSONToJDLEntityConverter', () => {
           Task: readJsonEntity('Task')
         };
         entities.Employee.relationships.filter(r => r.relationshipName === 'department')[0].javadoc = undefined;
-        jdlObject = convertEntitiesToJDL(entities);
+        jdlObject = convertEntitiesToJDL({ entities });
       });
 
       context('when parsing a JSON entity to JDL', () => {
@@ -192,7 +192,7 @@ describe('JSONToJDLEntityConverter', () => {
             Employee: readJsonEntity('Employee')
           };
           entities.Department.relationships.filter(r => r.relationshipName === 'employee')[0].javadoc = undefined;
-          const jdlObject = convertEntitiesToJDL(entities);
+          const jdlObject = convertEntitiesToJDL({ entities });
           const relationship = jdlObject.relationships.getOneToMany(
             'OneToMany_Department{employee}_Employee{department(foo)}'
           );
@@ -222,7 +222,7 @@ describe('JSONToJDLEntityConverter', () => {
               const entities = {
                 Country: readJsonEntity('Country')
               };
-              jdlObject = convertEntitiesToJDL(entities);
+              jdlObject = convertEntitiesToJDL({ entities });
             });
 
             it('parses relationships to the JHipster managed User entity', () => {
@@ -233,8 +233,10 @@ describe('JSONToJDLEntityConverter', () => {
             it('throws an error ', () => {
               expect(() => {
                 convertEntitiesToJDL({
-                  Country: readJsonEntity('Country'),
-                  User: readJsonEntity('Region')
+                  entities: {
+                    Country: readJsonEntity('Country'),
+                    User: readJsonEntity('Region')
+                  }
                 });
               }).to.throw('User entity name is reserved if skipUserManagement is not set.');
             });
@@ -255,7 +257,7 @@ describe('JSONToJDLEntityConverter', () => {
                 name: UnaryOptions.SKIP_USER_MANAGEMENT
               })
             );
-            jdlObject = convertEntitiesToJDL(entities, jdlObject);
+            jdlObject = convertEntitiesToJDL({ entities, jdl: jdlObject });
           });
 
           it('parses the User.json entity if skipUserManagement flag is set', () => {
@@ -272,7 +274,7 @@ describe('JSONToJDLEntityConverter', () => {
             const entities = {
               CassBankAccount: readJsonEntity('CassBankAccount')
             };
-            jdlObject = convertEntitiesToJDL(entities);
+            jdlObject = convertEntitiesToJDL({ entities });
           });
 
           it('parses tableName', () => {
@@ -301,15 +303,15 @@ describe('JSONToJDLEntityConverter', () => {
         });
 
         it('fails', () => {
-          expect(() => convertEntitiesToJDL([entity])).to.throw("Unrecognised blob type: 'unknown'");
+          expect(() => convertEntitiesToJDL({ entities: [entity] })).to.throw("Unrecognised blob type: 'unknown'");
         });
       });
     });
     context('when parsing relationships including the User entity', () => {
-      let entity;
+      let entities;
 
       before(() => {
-        entity = {
+        entities = {
           TestEntity: JSON.parse(
             fs
               .readFileSync(
@@ -322,7 +324,7 @@ describe('JSONToJDLEntityConverter', () => {
       });
 
       it('should not fail', () => {
-        expect(() => convertEntitiesToJDL(entity)).not.to.throw();
+        expect(() => convertEntitiesToJDL({ entities })).not.to.throw();
       });
     });
   });
