@@ -505,8 +505,7 @@ describe('JDLImporter', () => {
       it('exports their content', () => {
         ENTITY_NAMES.forEach(entityName => {
           const entityContent = JSON.parse(fse.readFileSync(path.join('.jhipster', `${entityName}.json`), 'utf-8'));
-          expect(entityContent.changelogDate).not.to.be.undefined;
-          delete entityContent.changelogDate;
+          expect(entityContent.changelogDate).to.be.undefined;
           if (expectedContent[entityName].javadoc === '') {
             delete expectedContent[entityName].javadoc;
           }
@@ -971,8 +970,7 @@ describe('JDLImporter', () => {
                 readJSON = JSON.parse(
                   fse.readFileSync(path.join(applicationName, '.jhipster', `${entityName}.json`), 'utf-8').toString()
                 );
-                expect(readJSON.changelogDate).not.to.be.undefined;
-                delete readJSON.changelogDate;
+                expect(readJSON.changelogDate).to.be.undefined;
                 expect(readJSON).to.deep.equal(expectedEntities[index]);
               });
               break;
@@ -980,16 +978,14 @@ describe('JDLImporter', () => {
               readJSON = JSON.parse(
                 fse.readFileSync(path.join(applicationName, '.jhipster', 'E.json'), 'utf-8').toString()
               );
-              expect(readJSON.changelogDate).not.to.be.undefined;
-              delete readJSON.changelogDate;
+              expect(readJSON.changelogDate).to.be.undefined;
               expect(readJSON).to.deep.equal(expectedEntities[2]);
               break;
             case 'myThirdApp': // only F
               readJSON = JSON.parse(
                 fse.readFileSync(path.join(applicationName, '.jhipster', 'F.json'), 'utf-8').toString()
               );
-              expect(readJSON.changelogDate).not.to.be.undefined;
-              delete readJSON.changelogDate;
+              expect(readJSON.changelogDate).to.be.undefined;
               expect(readJSON).to.deep.equal(expectedEntities[3]);
               break;
             default:

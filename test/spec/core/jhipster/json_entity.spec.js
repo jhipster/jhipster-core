@@ -48,8 +48,7 @@ describe('JSONEntity', () => {
       });
 
       it('sets default values', () => {
-        expect(entity.changelogDate).not.to.be.undefined;
-        delete entity.changelogDate;
+        expect(entity.changelogDate).to.be.undefined;
         expect(entity).to.deep.equal({
           name: 'Toto',
           clientRootFolder: '',
@@ -83,7 +82,6 @@ describe('JSONEntity', () => {
           readOnly: true,
           relationships: [42, 43],
           service: 'serviceClass',
-          changelogDate: 'aaa',
           microserviceName: 'nope',
           angularJSSuffix: 'yes',
           clientRootFolder: 'oh',
@@ -106,7 +104,6 @@ describe('JSONEntity', () => {
           readOnly: true,
           relationships: [42, 43],
           service: 'serviceClass',
-          changelogDate: 'aaa',
           microserviceName: 'nope',
           angularJSSuffix: 'yes',
           clientRootFolder: 'oh',

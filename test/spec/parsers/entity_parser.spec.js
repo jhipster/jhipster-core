@@ -203,10 +203,8 @@ describe('EntityParser', () => {
         it('converts it', () => {
           expect(content).not.to.be.null;
           expect(Object.keys(content)).to.have.length(2);
-          expect(content.EntityA.changelogDate).not.to.be.undefined;
-          expect(content.EntityB.changelogDate).not.to.be.undefined;
-          delete content.EntityA.changelogDate;
-          delete content.EntityB.changelogDate;
+          expect(content.EntityA.changelogDate).to.be.undefined;
+          expect(content.EntityB.changelogDate).to.be.undefined;
           expect(content).to.deep.equal({
             EntityA: {
               name: 'EntityA',
@@ -290,10 +288,8 @@ describe('EntityParser', () => {
         it('converts it', () => {
           expect(content).not.to.be.null;
           expect(Object.keys(content)).to.have.length(2);
-          expect(content.EntityA.changelogDate).not.to.be.undefined;
-          expect(content.EntityB.changelogDate).not.to.be.undefined;
-          delete content.EntityA.changelogDate;
-          delete content.EntityB.changelogDate;
+          expect(content.EntityA.changelogDate).to.be.undefined;
+          expect(content.EntityB.changelogDate).to.be.undefined;
           expect(content).to.deep.equal({
             EntityA: {
               name: 'EntityA',
@@ -377,10 +373,8 @@ describe('EntityParser', () => {
         it('converts it', () => {
           expect(content).not.to.be.null;
           expect(Object.keys(content)).to.have.length(2);
-          expect(content.EntityA.changelogDate).not.to.be.undefined;
-          expect(content.EntityB.changelogDate).not.to.be.undefined;
-          delete content.EntityA.changelogDate;
-          delete content.EntityB.changelogDate;
+          expect(content.EntityA.changelogDate).to.be.undefined;
+          expect(content.EntityB.changelogDate).to.be.undefined;
           expect(content).to.deep.equal({
             EntityA: {
               name: 'EntityA',
@@ -468,10 +462,8 @@ describe('EntityParser', () => {
         it('converts it', () => {
           expect(content).not.to.be.null;
           expect(Object.keys(content)).to.have.length(2);
-          expect(content.EntityA.changelogDate).not.to.be.undefined;
-          expect(content.EntityB.changelogDate).not.to.be.undefined;
-          delete content.EntityA.changelogDate;
-          delete content.EntityB.changelogDate;
+          expect(content.EntityA.changelogDate).to.be.undefined;
+          expect(content.EntityB.changelogDate).to.be.undefined;
           expect(content).to.deep.equal({
             EntityA: {
               name: 'EntityA',
@@ -933,7 +925,6 @@ describe('EntityParser', () => {
           databaseType: DatabaseTypes.NO,
           applicationType: ApplicationTypes.MICROSERVICE
         });
-        delete result.Toto.changelogDate;
       });
 
       it('converts everything into JSON', () => {
