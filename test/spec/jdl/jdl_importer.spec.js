@@ -1119,24 +1119,17 @@ describe('JDLImporter', () => {
       });
     });
     context('when parsing a JDL with underscores contained in the application name', () => {
-      let returned;
-
-      before(() => {
-        const importer = createImporterFromFiles([path.join('test', 'test_files', 'underscore_application_name.jdl')]);
-        returned = importer.import();
-      });
-
       after(() => {
         fse.removeSync('.jhipster');
         fse.removeSync('.yo-rc.json');
       });
 
-      it('accept underscore application name', () => {
-        expect(returned.exportedApplications[0]['generator-jhipster'].baseName.includes('_')).to.be.true;
-      });
-
-      it('accept underscore appsFolders name', () => {
-        expect(returned.exportedDeployments[0]['generator-jhipster'].appsFolders[0].includes('_')).to.be.true;
+      it('fails to create application with underscores in base name', () => {
+        expect(() =>
+          createImporterFromFiles([path.join('test', 'test_files', 'underscore_application_name.jdl')])
+        ).to.throw(
+          'Error: The baseName property name must match: /^[A-Za-z][A-Za-z0-9]*$/, got my_underscore_app.\n\tat line: 5, column: 14'
+        );
       });
     });
     context('when parsing JDL applications and deployment config', () => {
