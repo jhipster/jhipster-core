@@ -833,6 +833,47 @@ describe('DocumentParser', () => {
           expect(jdlObject.relationships.getOneToOne('OneToOne_A{b}_B').options.jpaDerivedIdentifier).to.be.true;
         });
       });
+      context('when parsing entity options in applications', () => {
+        before(() => {
+          const input = JDLReader.parseFromFiles(['./test/test_files/entity_options_in_applications.jdl']);
+          const jdlObject = DocumentParser.parseFromConfigurationObject({
+            parsedContent: input
+          });
+          parsedConfig = jdlObject.applications.toto;
+          expectedConfig = createJDLApplication({
+            applicationType: 'monolith',
+            authenticationType: 'jwt',
+            baseName: 'toto',
+            buildTool: 'maven',
+            cacheProvider: 'ehcache',
+            clientFramework: 'angularX',
+            clientTheme: 'none',
+            clientThemeVariant: '',
+            clientPackageManager: 'npm',
+            databaseType: 'sql',
+            devDatabaseType: 'h2Disk',
+            enableHibernateCache: true,
+            enableSwaggerCodegen: false,
+            enableTranslation: false,
+            jhiPrefix: 'jhi',
+            messageBroker: false,
+            nativeLanguage: 'en',
+            packageFolder: 'com/mathieu/sample',
+            packageName: 'com.mathieu.sample',
+            prodDatabaseType: 'mysql',
+            searchEngine: false,
+            serverPort: '8080',
+            serviceDiscoveryType: false,
+            skipClient: false,
+            skipServer: false,
+            skipUserManagement: false,
+            useSass: true,
+            websocket: false
+          });
+        });
+
+        it('should set them', () => {});
+      });
     });
   });
 });

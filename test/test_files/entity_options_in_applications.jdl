@@ -1,0 +1,24 @@
+application {
+  config {
+    baseName testApp1
+  }
+  entities A, B, C
+  readOnly A
+  paginate * with pagination except C
+  search C with couchbase
+}
+
+application {
+  config {
+    baseName testApp2
+  }
+  entities A, D
+  readOnly D
+}
+
+entity A
+entity B
+entity C
+entity D
+
+skipClient D
