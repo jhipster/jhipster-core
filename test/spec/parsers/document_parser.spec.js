@@ -834,45 +834,73 @@ describe('DocumentParser', () => {
         });
       });
       context('when parsing entity options in applications', () => {
-        before(() => {
-          const input = JDLReader.parseFromFiles(['./test/test_files/entity_options_in_applications.jdl']);
-          const jdlObject = DocumentParser.parseFromConfigurationObject({
-            parsedContent: input
+        context('if the entity list does not contain some entities mentioned in options', () => {
+          let parsedContent;
+
+          before(() => {
+            parsedContent = JDLReader.parseFromContent(`application {
+  config {
+    baseName testApp1
+  }
+  entities A
+  readOnly B
+}
+
+entity A
+entity B
+`);
           });
-          parsedConfig = jdlObject.applications.toto;
-          expectedConfig = createJDLApplication({
-            applicationType: 'monolith',
-            authenticationType: 'jwt',
-            baseName: 'toto',
-            buildTool: 'maven',
-            cacheProvider: 'ehcache',
-            clientFramework: 'angularX',
-            clientTheme: 'none',
-            clientThemeVariant: '',
-            clientPackageManager: 'npm',
-            databaseType: 'sql',
-            devDatabaseType: 'h2Disk',
-            enableHibernateCache: true,
-            enableSwaggerCodegen: false,
-            enableTranslation: false,
-            jhiPrefix: 'jhi',
-            messageBroker: false,
-            nativeLanguage: 'en',
-            packageFolder: 'com/mathieu/sample',
-            packageName: 'com.mathieu.sample',
-            prodDatabaseType: 'mysql',
-            searchEngine: false,
-            serverPort: '8080',
-            serviceDiscoveryType: false,
-            skipClient: false,
-            skipServer: false,
-            skipUserManagement: false,
-            useSass: true,
-            websocket: false
+
+          it('should fail', () => {
+            expect(() =>
+              DocumentParser.parseFromConfigurationObject({
+                parsedContent
+              })
+            ).to.throw(/^The entity B in the readOnly option isn't declared in testApp1's entity list.$/);
           });
         });
+        context('if the entity list contains all the entities mentioned in options', () => {
+          let optionsForFirstApplication;
+          let optionsForSecondApplication;
 
-        it('should set them', () => {});
+          before(() => {
+            const input = JDLReader.parseFromContent(`application {
+  config {
+    baseName testApp1
+  }
+  entities A, B, C
+  readOnly A
+  paginate * with pagination except C
+  search C with couchbase
+}
+
+application {
+  config {
+    baseName testApp2
+  }
+  entities A, D
+  readOnly D
+}
+
+entity A
+entity B
+entity C
+entity D
+
+skipClient D
+`);
+            const jdlObject = DocumentParser.parseFromConfigurationObject({
+              parsedContent: input
+            });
+            optionsForFirstApplication = jdlObject.applications.testApp1.options;
+            optionsForSecondApplication = jdlObject.applications.testApp2.options;
+          });
+
+          it('should parse them', () => {
+            expect(optionsForFirstApplication.size()).to.equal(3);
+            expect(optionsForSecondApplication.size()).to.equal(1);
+          });
+        });
       });
     });
   });
