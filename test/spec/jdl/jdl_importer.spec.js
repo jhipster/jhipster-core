@@ -1077,6 +1077,7 @@ relationship OneToOne {
 
       before(() => {
         const importer = createImporterFromFiles([path.join('test', 'test_files', 'annotations.jdl')], {
+          applicationName: 'toto',
           databaseType: DatabaseTypes.SQL
         });
         returned = importer.import();

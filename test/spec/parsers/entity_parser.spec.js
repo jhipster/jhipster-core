@@ -40,7 +40,7 @@ const BinaryOptions = require('../../../lib/core/jhipster/binary_options').Optio
 const BinaryOptionValues = require('../../../lib/core/jhipster/binary_options').Values;
 const RelationshipTypes = require('../../../lib/core/jhipster/relationship_types');
 
-describe('EntityParser', () => {
+describe.skip('EntityParser', () => {
   describe('::parse', () => {
     context('when passing invalid parameters', () => {
       context('such as undefined', () => {
