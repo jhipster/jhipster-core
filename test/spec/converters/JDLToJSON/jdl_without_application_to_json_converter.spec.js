@@ -1204,394 +1204,394 @@ describe('JDLWithoutApplicationToJSONConverter', () => {
             ]);
           });
         });
-      });
-      context("when the injected field in the destination side isn't present", () => {
-        context('for a One-to-One relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
+        context("when the injected field in the destination side isn't present", () => {
+          context('for a One-to-One relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
 
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const oneToOneRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: ONE_TO_ONE,
-              injectedFieldInFrom: 'b'
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const oneToOneRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: ONE_TO_ONE,
+                injectedFieldInFrom: 'b'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(oneToOneRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
             });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(oneToOneRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
 
-          it('should add the relationship for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityField: 'id',
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              ownerSide: true,
-              relationshipName: 'b',
-              relationshipType: 'one-to-one'
+            it('should add the relationship for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityField: 'id',
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                ownerSide: true,
+                relationshipName: 'b',
+                relationshipType: 'one-to-one'
+              });
+            });
+            it('should not add the relationship for the destination entity', () => {
+              expect(relationshipFromDestinationToSource).to.be.undefined;
             });
           });
-          it('should not add the relationship for the destination entity', () => {
-            expect(relationshipFromDestinationToSource).to.be.undefined;
-          });
-        });
-        context('for a One-to-Many relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
+          context('for a One-to-Many relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
 
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const oneToManyRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: ONE_TO_MANY,
-              injectedFieldInFrom: 'b'
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const oneToManyRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: ONE_TO_MANY,
+                injectedFieldInFrom: 'b'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(oneToManyRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
             });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(oneToManyRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
 
-          it('should add the relationship for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              relationshipName: 'b',
-              relationshipType: 'one-to-many'
+            it('should add the relationship for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                relationshipName: 'b',
+                relationshipType: 'one-to-many'
+              });
+            });
+            it('should add the relationship for the destination entity', () => {
+              expect(relationshipFromDestinationToSource).to.deep.equal({
+                otherEntityField: 'id',
+                otherEntityName: 'a',
+                otherEntityRelationshipName: 'b',
+                relationshipName: 'a',
+                relationshipType: 'many-to-one'
+              });
             });
           });
-          it('should add the relationship for the destination entity', () => {
-            expect(relationshipFromDestinationToSource).to.deep.equal({
-              otherEntityField: 'id',
-              otherEntityName: 'a',
-              otherEntityRelationshipName: 'b',
-              relationshipName: 'a',
-              relationshipType: 'many-to-one'
-            });
-          });
-        });
-        context('for a Many-to-One relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
+          context('for a Many-to-One relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
 
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const manyToOneRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: MANY_TO_ONE,
-              injectedFieldInFrom: 'b'
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const manyToOneRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: MANY_TO_ONE,
+                injectedFieldInFrom: 'b'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(manyToOneRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
             });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(manyToOneRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
 
-          it('should add the relationship for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityField: 'id',
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              relationshipName: 'b',
-              relationshipType: 'many-to-one'
+            it('should add the relationship for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityField: 'id',
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                relationshipName: 'b',
+                relationshipType: 'many-to-one'
+              });
+            });
+            it('should not add the relationship for the destination entity', () => {
+              expect(relationshipFromDestinationToSource).to.be.undefined;
             });
           });
-          it('should not add the relationship for the destination entity', () => {
-            expect(relationshipFromDestinationToSource).to.be.undefined;
-          });
-        });
-        context('for a Many-to-Many relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
+          context('for a Many-to-Many relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
 
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const manyToManyRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: MANY_TO_MANY,
-              injectedFieldInFrom: 'b'
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const manyToManyRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: MANY_TO_MANY,
+                injectedFieldInFrom: 'b'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(manyToManyRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
             });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(manyToManyRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
 
-          it('should add the relationship for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityField: 'id',
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              ownerSide: true,
-              relationshipName: 'b',
-              relationshipType: 'many-to-many'
+            it('should add the relationship for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityField: 'id',
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                ownerSide: true,
+                relationshipName: 'b',
+                relationshipType: 'many-to-many'
+              });
             });
-          });
-          it('should add the relationship for the destination entity', () => {
-            expect(relationshipFromDestinationToSource).to.deep.equal({
-              otherEntityField: 'id',
-              otherEntityName: 'a',
-              otherEntityRelationshipName: 'b',
-              ownerSide: false,
-              relationshipName: 'a',
-              relationshipType: 'many-to-many'
-            });
-          });
-        });
-      });
-      context('when setting custom field for relationship mapping', () => {
-        context('for a One-to-One relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
-
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const oneToOneRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: ONE_TO_ONE,
-              injectedFieldInFrom: 'b(name)',
-              injectedFieldInTo: 'a(name)'
-            });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(oneToOneRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
-
-          it('should add it for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityField: 'name',
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              ownerSide: true,
-              relationshipName: 'b',
-              relationshipType: 'one-to-one'
-            });
-          });
-          it('should ignore it for the destination entity', () => {
-            expect(relationshipFromDestinationToSource).to.deep.equal({
-              otherEntityName: 'a',
-              otherEntityRelationshipName: 'b',
-              ownerSide: false,
-              relationshipName: 'a',
-              relationshipType: 'one-to-one'
+            it('should add the relationship for the destination entity', () => {
+              expect(relationshipFromDestinationToSource).to.deep.equal({
+                otherEntityField: 'id',
+                otherEntityName: 'a',
+                otherEntityRelationshipName: 'b',
+                ownerSide: false,
+                relationshipName: 'a',
+                relationshipType: 'many-to-many'
+              });
             });
           });
         });
-        context('for a One-to-Many relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
+        context('when setting custom field for relationship mapping', () => {
+          context('for a One-to-One relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
 
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const oneToManyRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: ONE_TO_MANY,
-              injectedFieldInFrom: 'b(name)',
-              injectedFieldInTo: 'a(name)'
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const oneToOneRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: ONE_TO_ONE,
+                injectedFieldInFrom: 'b(name)',
+                injectedFieldInTo: 'a(name)'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(oneToOneRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
             });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(oneToManyRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
 
-          it('should ignore it for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              relationshipName: 'b',
-              relationshipType: 'one-to-many'
+            it('should add it for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityField: 'name',
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                ownerSide: true,
+                relationshipName: 'b',
+                relationshipType: 'one-to-one'
+              });
+            });
+            it('should ignore it for the destination entity', () => {
+              expect(relationshipFromDestinationToSource).to.deep.equal({
+                otherEntityName: 'a',
+                otherEntityRelationshipName: 'b',
+                ownerSide: false,
+                relationshipName: 'a',
+                relationshipType: 'one-to-one'
+              });
             });
           });
-          it('should add it for the destination entity', () => {
-            expect(relationshipFromDestinationToSource).to.deep.equal({
-              otherEntityField: 'name',
-              otherEntityName: 'a',
-              otherEntityRelationshipName: 'b',
-              relationshipName: 'a',
-              relationshipType: 'many-to-one'
-            });
-          });
-        });
-        context('for a Many-to-One relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
+          context('for a One-to-Many relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
 
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const manyToOneRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: MANY_TO_ONE,
-              injectedFieldInFrom: 'b(name)',
-              injectedFieldInTo: 'a(name)'
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const oneToManyRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: ONE_TO_MANY,
+                injectedFieldInFrom: 'b(name)',
+                injectedFieldInTo: 'a(name)'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(oneToManyRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
             });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(manyToOneRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
 
-          it('should add it for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityField: 'name',
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              relationshipName: 'b',
-              relationshipType: 'many-to-one'
+            it('should ignore it for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                relationshipName: 'b',
+                relationshipType: 'one-to-many'
+              });
+            });
+            it('should add it for the destination entity', () => {
+              expect(relationshipFromDestinationToSource).to.deep.equal({
+                otherEntityField: 'name',
+                otherEntityName: 'a',
+                otherEntityRelationshipName: 'b',
+                relationshipName: 'a',
+                relationshipType: 'many-to-one'
+              });
             });
           });
-          it('should ignore it for the source entity', () => {
-            expect(relationshipFromDestinationToSource).to.deep.equal({
-              otherEntityName: 'a',
-              otherEntityRelationshipName: 'b',
-              relationshipName: 'a',
-              relationshipType: 'one-to-many'
-            });
-          });
-        });
-        context('for a Many-to-Many relationship', () => {
-          let relationshipFromSourceToDestination;
-          let relationshipFromDestinationToSource;
+          context('for a Many-to-One relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
 
-          before(() => {
-            const jdlObject = new JDLObject();
-            const entityA = new JDLEntity({ name: 'A', comment: 'a' });
-            const entityB = new JDLEntity({ name: 'B', comment: 'b' });
-            const manyToManyRelationship = new JDLRelationship({
-              from: 'A',
-              to: 'B',
-              type: MANY_TO_MANY,
-              injectedFieldInFrom: 'b(name)',
-              injectedFieldInTo: 'a(name)'
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const manyToOneRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: MANY_TO_ONE,
+                injectedFieldInFrom: 'b(name)',
+                injectedFieldInTo: 'a(name)'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(manyToOneRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
             });
-            jdlObject.addEntity(entityA);
-            jdlObject.addEntity(entityB);
-            jdlObject.addRelationship(manyToManyRelationship);
-            const returned = convert({
-              jdlObject,
-              applicationName: 'toto',
-              applicationType: MONOLITH,
-              databaseType: SQL,
-              creationTimestamp: Date.now()
-            });
-            relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
-              .relationships[0];
-            relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
-              .relationships[0];
-          });
 
-          it('should add it for the source entity', () => {
-            expect(relationshipFromSourceToDestination).to.deep.equal({
-              otherEntityField: 'name',
-              otherEntityName: 'b',
-              otherEntityRelationshipName: 'a',
-              ownerSide: true,
-              relationshipName: 'b',
-              relationshipType: 'many-to-many'
+            it('should add it for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityField: 'name',
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                relationshipName: 'b',
+                relationshipType: 'many-to-one'
+              });
+            });
+            it('should ignore it for the source entity', () => {
+              expect(relationshipFromDestinationToSource).to.deep.equal({
+                otherEntityName: 'a',
+                otherEntityRelationshipName: 'b',
+                relationshipName: 'a',
+                relationshipType: 'one-to-many'
+              });
             });
           });
-          it('should add it for the destination entity', () => {
-            expect(relationshipFromDestinationToSource).to.deep.equal({
-              otherEntityField: 'name',
-              otherEntityName: 'a',
-              otherEntityRelationshipName: 'b',
-              ownerSide: false,
-              relationshipName: 'a',
-              relationshipType: 'many-to-many'
+          context('for a Many-to-Many relationship', () => {
+            let relationshipFromSourceToDestination;
+            let relationshipFromDestinationToSource;
+
+            before(() => {
+              const jdlObject = new JDLObject();
+              const entityA = new JDLEntity({ name: 'A', comment: 'a' });
+              const entityB = new JDLEntity({ name: 'B', comment: 'b' });
+              const manyToManyRelationship = new JDLRelationship({
+                from: 'A',
+                to: 'B',
+                type: MANY_TO_MANY,
+                injectedFieldInFrom: 'b(name)',
+                injectedFieldInTo: 'a(name)'
+              });
+              jdlObject.addEntity(entityA);
+              jdlObject.addEntity(entityB);
+              jdlObject.addRelationship(manyToManyRelationship);
+              const returned = convert({
+                jdlObject,
+                applicationName: 'toto',
+                applicationType: MONOLITH,
+                databaseType: SQL,
+                creationTimestamp: Date.now()
+              });
+              relationshipFromSourceToDestination = returned.get('toto').find(entity => entity.name === 'A')
+                .relationships[0];
+              relationshipFromDestinationToSource = returned.get('toto').find(entity => entity.name === 'B')
+                .relationships[0];
+            });
+
+            it('should add it for the source entity', () => {
+              expect(relationshipFromSourceToDestination).to.deep.equal({
+                otherEntityField: 'name',
+                otherEntityName: 'b',
+                otherEntityRelationshipName: 'a',
+                ownerSide: true,
+                relationshipName: 'b',
+                relationshipType: 'many-to-many'
+              });
+            });
+            it('should add it for the destination entity', () => {
+              expect(relationshipFromDestinationToSource).to.deep.equal({
+                otherEntityField: 'name',
+                otherEntityName: 'a',
+                otherEntityRelationshipName: 'b',
+                ownerSide: false,
+                relationshipName: 'a',
+                relationshipType: 'many-to-many'
+              });
             });
           });
         });
