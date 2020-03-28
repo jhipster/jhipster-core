@@ -18,12 +18,12 @@
  */
 
 const { expect } = require('chai');
-const JDLObject = require('../../../lib/core/jdl_object');
-const JDLEntity = require('../../../lib/core/jdl_entity');
-const JDLField = require('../../../lib/core/jdl_field');
-const JDLEnum = require('../../../lib/core/jdl_enum');
-const JDLValidation = require('../../../lib/core/jdl_validation');
-const { CommonDBTypes } = require('../../../lib/core/jhipster/field_types');
+const JDLObject = require('../../../../lib/core/jdl_object');
+const JDLEntity = require('../../../../lib/core/jdl_entity');
+const JDLField = require('../../../../lib/core/jdl_field');
+const JDLEnum = require('../../../../lib/core/jdl_enum');
+const JDLValidation = require('../../../../lib/core/jdl_validation');
+const { CommonDBTypes } = require('../../../../lib/core/jhipster/field_types');
 const {
   MINBYTES,
   PATTERN,
@@ -34,8 +34,8 @@ const {
   MINLENGTH,
   MIN,
   MAX
-} = require('../../../lib/core/jhipster/validations');
-const { convert } = require('../../../lib/converters/JDLToJSON/jdl_to_json_field_converter');
+} = require('../../../../lib/core/jhipster/validations');
+const { convert } = require('../../../../lib/converters/JDLToJSON/jdl_to_json_field_converter');
 
 describe('JDLToJSONFieldConverter', () => {
   describe('convert', () => {
