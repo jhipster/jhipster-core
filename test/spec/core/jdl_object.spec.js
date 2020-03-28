@@ -259,6 +259,36 @@ describe('JDLObject', () => {
       });
     });
   });
+  describe('#getEntities', () => {
+    context('when there are no entities', () => {
+      let object;
+
+      before(() => {
+        object = new JDLObject();
+      });
+
+      it('should return an empty array', () => {
+        expect(object.getEntities()).to.deep.equal([]);
+      });
+    });
+    context('when there are entities', () => {
+      let entity;
+      let returnedEntities;
+
+      before(() => {
+        const object = new JDLObject();
+        entity = new JDLEntity({
+          name: 'toto'
+        });
+        object.addEntity(entity);
+        returnedEntities = object.getEntities();
+      });
+
+      it('should return them in an array', () => {
+        expect(returnedEntities).to.deep.equal([entity]);
+      });
+    });
+  });
   describe('#getEntityQuantity', () => {
     let jdlObject;
 
