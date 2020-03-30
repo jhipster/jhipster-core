@@ -35,12 +35,14 @@ const logger = require('../../../../lib/utils/objects/logger');
 
 describe('JDLToJSONOptionConverter', () => {
   describe('convert', () => {
-    context('when not passing a JDL object', () => {
+    context('when not passing a JDL option holder', () => {
       it('should fail', () => {
-        expect(() => convert()).to.throw(/^A JDL Object must be passed to convert JDL options to JSON\.$/);
+        expect(() => convert()).to.throw(
+          /^A JDL object or application must be passed to convert JDL options to JSON\.$/
+        );
       });
     });
-    context('when passing a JDL object', () => {
+    context('when passing a JDL option holder', () => {
       context('when there is no option', () => {
         let returned;
 
@@ -66,62 +68,62 @@ describe('JDLToJSONOptionConverter', () => {
           const options = [
             new JDLUnaryOption({
               name: UnaryOptions.EMBEDDED,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLUnaryOption({
               name: UnaryOptions.NO_FLUENT_METHOD,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLUnaryOption({
               name: UnaryOptions.FILTER,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLUnaryOption({
               name: UnaryOptions.READ_ONLY,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLUnaryOption({
               name: UnaryOptions.SKIP_CLIENT,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLUnaryOption({
               name: UnaryOptions.SKIP_SERVER,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLBinaryOption({
               name: BinaryOptions.Options.ANGULAR_SUFFIX,
               value: 'suffix',
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLBinaryOption({
               name: BinaryOptions.Options.CLIENT_ROOT_FOLDER,
               value: '../client_root_folder',
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLBinaryOption({
               name: BinaryOptions.Options.DTO,
               value: BinaryOptions.Values.dto.MAPSTRUCT,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLBinaryOption({
               name: BinaryOptions.Options.MICROSERVICE,
               value: 'myMs',
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLBinaryOption({
               name: BinaryOptions.Options.PAGINATION,
               value: BinaryOptions.Values.pagination.PAGINATION,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLBinaryOption({
               name: BinaryOptions.Options.SEARCH,
               value: BinaryOptions.Values.search.COUCHBASE,
-              entityList: ['A']
+              entityNames: ['A']
             }),
             new JDLBinaryOption({
               name: BinaryOptions.Options.SERVICE,
               value: BinaryOptions.Values.service.SERVICE_IMPL,
-              entityList: ['A']
+              entityNames: ['A']
             })
           ];
           jdlObject.addEntity(entityA);
@@ -165,7 +167,7 @@ describe('JDLToJSONOptionConverter', () => {
             new JDLBinaryOption({
               name: BinaryOptions.Options.DTO,
               value: BinaryOptions.Values.dto.MAPSTRUCT,
-              entityList: ['A']
+              entityNames: ['A']
             })
           );
           const returnedMap = convert(jdlObject);
@@ -205,7 +207,7 @@ describe('JDLToJSONOptionConverter', () => {
           jdlObject.addOption(
             new JDLUnaryOption({
               name: UnaryOptions.FILTER,
-              entityList: ['A']
+              entityNames: ['A']
             })
           );
           const returnedMap = convert(jdlObject);
@@ -244,7 +246,7 @@ describe('JDLToJSONOptionConverter', () => {
             new JDLUnaryOption({
               name: BinaryOptions.Options.SEARCH,
               values: BinaryOptions.Values.search.COUCHBASE,
-              entityList: ['*'],
+              entityNames: ['*'],
               excludedNames: ['A']
             })
           );
