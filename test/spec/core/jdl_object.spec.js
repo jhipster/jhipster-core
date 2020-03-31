@@ -93,6 +93,47 @@ describe('JDLObject', () => {
       });
     });
   });
+  describe('#getApplication', () => {
+    context('when not passing an application name', () => {
+      let jdlObject;
+
+      before(() => {
+        jdlObject = new JDLObject();
+        jdlObject.addApplication(createJDLApplication({ baseName: 'toto' }));
+      });
+
+      it('should return undefined', () => {
+        expect(jdlObject.getApplication()).to.be.undefined;
+      });
+    });
+    context("when passing an application's name", () => {
+      context('that does not exist', () => {
+        let jdlObject;
+
+        before(() => {
+          jdlObject = new JDLObject();
+          jdlObject.addApplication(createJDLApplication({ baseName: 'toto' }));
+        });
+
+        it('should return undefined', () => {
+          expect(jdlObject.getApplication('tata')).to.be.undefined;
+        });
+      });
+
+      context('that exists', () => {
+        let jdlObject;
+
+        before(() => {
+          jdlObject = new JDLObject();
+          jdlObject.addApplication(createJDLApplication({ baseName: 'toto' }));
+        });
+
+        it('should return undefined', () => {
+          expect(jdlObject.getApplication('toto')).not.to.be.undefined;
+        });
+      });
+    });
+  });
   describe('#addDeployment', () => {
     context('when adding an invalid deployment', () => {
       const object = new JDLObject();

@@ -1016,6 +1016,7 @@ relationship OneToOne {
           expect(readJSON).to.deep.equal(expectedApplications[index]);
         });
       });
+
       it('exports the entities for each application', () => {
         APPLICATION_NAMES.forEach(applicationName => {
           let readJSON;
