@@ -73,7 +73,7 @@ describe('JDLToJSONFieldConverter', () => {
         });
       });
       context('when having blobs', () => {
-        context('that are recnognised', () => {
+        context('that are recognised', () => {
           let convertedFields;
 
           before(() => {
