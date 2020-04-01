@@ -431,6 +431,147 @@ describe('JDLToJSONRelationshipConverter', () => {
           });
         });
       });
+      context("when the injected field in the source side isn't present", () => {
+        context('for a One-to-One relationship', () => {
+          let relationshipFromSourceToDestination;
+          let relationshipFromDestinationToSource;
+
+          before(() => {
+            const oneToOneRelationship = new JDLRelationship({
+              from: 'A',
+              to: 'B',
+              type: ONE_TO_ONE,
+              injectedFieldInTo: 'a'
+            });
+            const returned = convert([oneToOneRelationship], ['A', 'B']);
+            relationshipFromSourceToDestination = returned.get('A')[0];
+            relationshipFromDestinationToSource = returned.get('B')[0];
+          });
+
+          it('should add the relationship for the source entity', () => {
+            expect(relationshipFromSourceToDestination).to.deep.equal({
+              otherEntityField: 'id',
+              otherEntityName: 'b',
+              otherEntityRelationshipName: 'a',
+              ownerSide: true,
+              relationshipName: 'b',
+              relationshipType: 'one-to-one'
+            });
+          });
+          it('should add the relationship for the destination entity', () => {
+            expect(relationshipFromDestinationToSource).to.deep.equal({
+              otherEntityName: 'a',
+              otherEntityRelationshipName: 'b',
+              ownerSide: false,
+              relationshipName: 'a',
+              relationshipType: 'one-to-one'
+            });
+          });
+        });
+        context('for a One-to-Many relationship', () => {
+          let relationshipFromSourceToDestination;
+          let relationshipFromDestinationToSource;
+
+          before(() => {
+            const oneToManyRelationship = new JDLRelationship({
+              from: 'A',
+              to: 'B',
+              type: ONE_TO_MANY,
+              injectedFieldInTo: 'a'
+            });
+            const returned = convert([oneToManyRelationship], ['A', 'B']);
+            relationshipFromSourceToDestination = returned.get('A')[0];
+            relationshipFromDestinationToSource = returned.get('B')[0];
+          });
+
+          it('should add the relationship for the source entity', () => {
+            expect(relationshipFromSourceToDestination).to.deep.equal({
+              otherEntityName: 'b',
+              otherEntityRelationshipName: 'a',
+              relationshipName: 'b',
+              relationshipType: 'one-to-many'
+            });
+          });
+          it('should add the relationship for the destination entity', () => {
+            expect(relationshipFromDestinationToSource).to.deep.equal({
+              otherEntityField: 'id',
+              otherEntityName: 'a',
+              otherEntityRelationshipName: 'b',
+              relationshipName: 'a',
+              relationshipType: 'many-to-one'
+            });
+          });
+        });
+        context('for a Many-to-One relationship', () => {
+          let relationshipFromSourceToDestination;
+          let relationshipFromDestinationToSource;
+
+          before(() => {
+            const manyToOneRelationship = new JDLRelationship({
+              from: 'A',
+              to: 'B',
+              type: MANY_TO_ONE,
+              injectedFieldInTo: 'a'
+            });
+            const returned = convert([manyToOneRelationship], ['A', 'B']);
+            relationshipFromSourceToDestination = returned.get('A')[0];
+            relationshipFromDestinationToSource = returned.get('B')[0];
+          });
+
+          it('should add the relationship for the source entity', () => {
+            expect(relationshipFromSourceToDestination).to.deep.equal({
+              otherEntityName: 'b',
+              otherEntityRelationshipName: 'a',
+              relationshipType: 'many-to-one'
+            });
+          });
+          it('should add the relationship for the destination entity', () => {
+            expect(relationshipFromDestinationToSource).to.deep.equal({
+              otherEntityName: 'a',
+              otherEntityRelationshipName: 'b',
+              relationshipName: 'a',
+              relationshipType: 'one-to-many'
+            });
+          });
+        });
+        context('for a Many-to-Many relationship', () => {
+          let relationshipFromSourceToDestination;
+          let relationshipFromDestinationToSource;
+
+          before(() => {
+            const manyToManyRelationship = new JDLRelationship({
+              from: 'A',
+              to: 'B',
+              type: MANY_TO_MANY,
+              injectedFieldInTo: 'a'
+            });
+            const returned = convert([manyToManyRelationship], ['A', 'B']);
+            relationshipFromSourceToDestination = returned.get('A')[0];
+            relationshipFromDestinationToSource = returned.get('B')[0];
+          });
+
+          it('should add the relationship for the source entity', () => {
+            expect(relationshipFromSourceToDestination).to.deep.equal({
+              otherEntityField: 'id',
+              otherEntityName: 'b',
+              otherEntityRelationshipName: 'a',
+              ownerSide: true,
+              relationshipName: 'b',
+              relationshipType: 'many-to-many'
+            });
+          });
+          it('should add the relationship for the destination entity', () => {
+            expect(relationshipFromDestinationToSource).to.deep.equal({
+              otherEntityField: 'id',
+              otherEntityName: 'a',
+              otherEntityRelationshipName: 'b',
+              ownerSide: false,
+              relationshipName: 'a',
+              relationshipType: 'many-to-many'
+            });
+          });
+        });
+      });
       context('when setting custom field for relationship mapping', () => {
         context('for a One-to-One relationship', () => {
           let relationshipFromSourceToDestination;

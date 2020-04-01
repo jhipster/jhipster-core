@@ -73,66 +73,90 @@ describe('JDLToJSONFieldConverter', () => {
         });
       });
       context('when having blobs', () => {
-        let convertedFields;
+        context('that are recnognised', () => {
+          let convertedFields;
 
-        before(() => {
-          const jdlObject = new JDLObject();
-          const entityA = new JDLEntity({
-            name: 'A',
-            tableName: 'entity_a',
-            comment: 'The best entity'
+          before(() => {
+            const jdlObject = new JDLObject();
+            const entityA = new JDLEntity({
+              name: 'A',
+              tableName: 'entity_a',
+              comment: 'The best entity'
+            });
+            const anyBlobField = new JDLField({
+              name: 'anyBlobField',
+              type: CommonDBTypes.ANY_BLOB
+            });
+            const textBlobField = new JDLField({
+              name: 'textBlobField',
+              type: CommonDBTypes.TEXT_BLOB
+            });
+            const blobField = new JDLField({
+              name: 'blobField',
+              type: CommonDBTypes.BLOB
+            });
+            const imageBlobField = new JDLField({
+              name: 'imageBlobField',
+              type: CommonDBTypes.IMAGE_BLOB
+            });
+            entityA.addField(anyBlobField);
+            entityA.addField(textBlobField);
+            entityA.addField(blobField);
+            entityA.addField(imageBlobField);
+            jdlObject.addEntity(entityA);
+            const returnedMap = convert(jdlObject);
+            convertedFields = returnedMap.get('A');
           });
-          const anyBlobField = new JDLField({
-            name: 'anyBlobField',
-            type: CommonDBTypes.ANY_BLOB
+
+          it('should convert them', () => {
+            expect(convertedFields).to.deep.equal([
+              {
+                fieldName: 'anyBlobField',
+                fieldType: 'byte[]',
+                fieldTypeBlobContent: 'any'
+              },
+              {
+                fieldName: 'textBlobField',
+                fieldType: 'byte[]',
+                fieldTypeBlobContent: 'text'
+              },
+              {
+                fieldName: 'blobField',
+                fieldType: 'byte[]',
+                fieldTypeBlobContent: 'any'
+              },
+              {
+                fieldName: 'imageBlobField',
+                fieldType: 'byte[]',
+                fieldTypeBlobContent: 'image'
+              }
+            ]);
           });
-          const textBlobField = new JDLField({
-            name: 'textBlobField',
-            type: CommonDBTypes.TEXT_BLOB
-          });
-          const blobField = new JDLField({
-            name: 'blobField',
-            type: CommonDBTypes.BLOB
-          });
-          const imageBlobField = new JDLField({
-            name: 'imageBlobField',
-            type: CommonDBTypes.IMAGE_BLOB
-          });
-          entityA.addField(anyBlobField);
-          entityA.addField(textBlobField);
-          entityA.addField(blobField);
-          entityA.addField(imageBlobField);
-          jdlObject.addEntity(entityA);
-          const returnedMap = convert(jdlObject);
-          convertedFields = returnedMap.get('A');
+
+          it('should convert the blob content', () => {});
         });
+        context("that doesn't exist", () => {
+          let jdlObject;
 
-        it('should convert them', () => {
-          expect(convertedFields).to.deep.equal([
-            {
-              fieldName: 'anyBlobField',
-              fieldType: 'byte[]',
-              fieldTypeBlobContent: 'any'
-            },
-            {
-              fieldName: 'textBlobField',
-              fieldType: 'byte[]',
-              fieldTypeBlobContent: 'text'
-            },
-            {
-              fieldName: 'blobField',
-              fieldType: 'byte[]',
-              fieldTypeBlobContent: 'any'
-            },
-            {
-              fieldName: 'imageBlobField',
-              fieldType: 'byte[]',
-              fieldTypeBlobContent: 'image'
-            }
-          ]);
+          before(() => {
+            jdlObject = new JDLObject();
+            const entityA = new JDLEntity({
+              name: 'A',
+              tableName: 'entity_a',
+              comment: 'The best entity'
+            });
+            const anyBlobField = new JDLField({
+              name: 'anyBlobField',
+              type: `StupidBlob`
+            });
+            entityA.addField(anyBlobField);
+            jdlObject.addEntity(entityA);
+          });
+
+          it('should fail', () => {
+            expect(() => convert(jdlObject)).to.throw(/^Unrecognised Blob type: StupidBlob\.$/);
+          });
         });
-
-        it('should convert the blob content', () => {});
       });
       context('with field types being enums', () => {
         let convertedField;
