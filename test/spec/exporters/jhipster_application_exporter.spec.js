@@ -51,7 +51,8 @@ describe('JHipsterApplicationExporter', () => {
               enableTranslation: false,
               languages: ['en', 'fr'],
               jhipsterVersion: '4.9.0',
-              otherModules: ['MyModule']
+              otherModules: ['MyModule'],
+              creationTimestamp: 'new'
             })
           );
           fs.readFile(path.join('.yo-rc.json'), { encoding: 'utf8' }, (err, data) => {
@@ -102,7 +103,8 @@ describe('JHipsterApplicationExporter', () => {
               skipUserManagement: false,
               testFrameworks: [],
               useSass: true,
-              websocket: false
+              websocket: false,
+              creationTimestamp: 'new'
             }
           });
         });
@@ -144,7 +146,8 @@ describe('JHipsterApplicationExporter', () => {
             skipUserManagement: false,
             testFrameworks: [],
             useSass: true,
-            websocket: false
+            websocket: false,
+            creationTimestamp: 'new'
           });
         });
       });
@@ -170,6 +173,34 @@ describe('JHipsterApplicationExporter', () => {
         });
       });
 
+      context('when exporting an application to JSON with creationTimestampConfig', () => {
+        let content;
+        before(() => {
+          exportApplication(
+            createJDLApplication({
+              applicationType: MONOLITH,
+              baseName: 'toto',
+              packageName: 'com.mathieu.sample',
+              enableTranslation: false,
+              languages: ['en', 'fr'],
+              jhipsterVersion: '4.9.0',
+              otherModules: ['MyModule']
+            }),
+            { creationTimestampConfig: 1546300800000 }
+          );
+          content = JSON.parse(fs.readFileSync(path.join('.yo-rc.json'), { encoding: 'utf8' }));
+        });
+
+        after(() => {
+          fs.unlinkSync(path.join('.yo-rc.json'));
+        });
+
+        it('sets creationTimestamp on .yo-rc.json', () => {
+          expect(content['generator-jhipster']).not.to.be.undefined;
+          expect(content['generator-jhipster'].creationTimestamp).to.equal(1546300800000);
+        });
+      });
+
       describe('when exporting an existing application to JSON', () => {
         let content;
 
@@ -179,7 +210,8 @@ describe('JHipsterApplicationExporter', () => {
             JSON.stringify(
               {
                 'generator-jhipster': {
-                  jwtSecretKey: '1234'
+                  jwtSecretKey: '1234',
+                  creationTimestamp: 'old'
                 },
                 test: 1234
               },
@@ -194,13 +226,18 @@ describe('JHipsterApplicationExporter', () => {
               packageName: 'com.mathieu.sample',
               enableTranslation: false,
               languages: ['en', 'fr'],
-              jhipsterVersion: '4.9.0'
+              jhipsterVersion: '4.9.0',
+              creationTimestamp: 'new'
             })
           );
           content = JSON.parse(fs.readFileSync(path.join('.yo-rc.json'), { encoding: 'utf8' }));
         });
         after(() => {
           fs.unlinkSync(path.join('.yo-rc.json'));
+        });
+
+        it("doesn't override creationTimestamp value", () => {
+          expect(content['generator-jhipster'].creationTimestamp).to.equal('old');
         });
 
         it('adds the read content to the exported application', () => {
@@ -239,7 +276,8 @@ describe('JHipsterApplicationExporter', () => {
               testFrameworks: [],
               useSass: true,
               websocket: false,
-              jwtSecretKey: '1234'
+              jwtSecretKey: '1234',
+              creationTimestamp: 'old'
             }
           });
         });
