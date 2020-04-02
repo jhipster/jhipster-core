@@ -25,6 +25,7 @@ const { expect } = require('chai');
 const ApplicationTypes = require('../../../lib/core/jhipster/application_types');
 const DatabaseTypes = require('../../../lib/core/jhipster/database_types');
 const { createImporterFromFiles, createImporterFromContent } = require('../../../lib/jdl/jdl_importer');
+const { formatDateForLiquibase } = require('../../../lib/utils/format_utils');
 
 describe('JDLImporter', () => {
   describe('createImporterFromFiles', () => {
@@ -1711,7 +1712,7 @@ paginate * with infinite-scroll
       it('should set them', () => {
         expect(entityA).to.deep.equal({
           applications: ['tata'],
-          changelogDate: '20200101000100',
+          changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
           clientRootFolder: '',
           dto: 'no',
           embedded: false,
@@ -1727,7 +1728,7 @@ paginate * with infinite-scroll
         });
         expect(entityB).to.deep.equal({
           applications: ['tata'],
-          changelogDate: '20200101000200',
+          changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 2 }),
           clientRootFolder: '',
           dto: 'no',
           embedded: false,
@@ -1743,7 +1744,7 @@ paginate * with infinite-scroll
         });
         expect(entityCInTata).to.deep.equal({
           applications: ['tata', 'tutu'],
-          changelogDate: '20200101000300',
+          changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 3 }),
           clientRootFolder: '',
           dto: 'no',
           embedded: false,
@@ -1759,7 +1760,7 @@ paginate * with infinite-scroll
         });
         expect(entityCInTutu).to.deep.equal({
           applications: ['tata', 'tutu'],
-          changelogDate: '20200101000300',
+          changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 3 }),
           clientRootFolder: '',
           dto: 'no',
           embedded: false,
@@ -1775,7 +1776,7 @@ paginate * with infinite-scroll
         });
         expect(entityD).to.deep.equal({
           applications: ['tutu'],
-          changelogDate: '20200101000400',
+          changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 4 }),
           clientRootFolder: '',
           dto: 'mapstruct',
           embedded: false,
@@ -1791,7 +1792,7 @@ paginate * with infinite-scroll
         });
         expect(entityE).to.deep.equal({
           applications: ['tutu'],
-          changelogDate: '20200101000500',
+          changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 5 }),
           clientRootFolder: '',
           dto: 'no',
           embedded: false,

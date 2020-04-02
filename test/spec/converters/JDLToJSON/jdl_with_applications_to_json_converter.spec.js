@@ -49,6 +49,7 @@ const {
 const { JPA_DERIVED_IDENTIFIER } = require('../../../../lib/core/jhipster/relationship_options');
 const logger = require('../../../../lib/utils/objects/logger');
 const { convert } = require('../../../../lib/converters/JDLToJSON/jdl_with_applications_to_json_converter');
+const { formatDateForLiquibase } = require('../../../../lib/utils/format_utils');
 
 describe('JDLWithApplicationsToJSONConverter', () => {
   describe('convert', () => {
@@ -145,7 +146,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
         it('should convert the entity', () => {
           expect(convertedEntity).to.deep.equal({
             applications: ['toto'],
-            changelogDate: '20200101000100',
+            changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
             clientRootFolder: '',
             dto: 'no',
             embedded: false,
@@ -252,7 +253,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           expect(convertedEntity).to.deep.equal({
             angularJSSuffix: 'suffix',
             applications: ['toto'],
-            changelogDate: '20200101000100',
+            changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
             clientRootFolder: '../client_root_folder',
             dto: 'mapstruct',
             embedded: true,
@@ -316,7 +317,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
         it('should set the service option to serviceClass', () => {
           expect(convertedEntity).to.deep.equal({
             applications: ['toto'],
-            changelogDate: '20200101000100',
+            changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
             clientRootFolder: '',
             dto: 'mapstruct',
             embedded: false,
@@ -378,7 +379,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
         it('should set the service option to serviceClass', () => {
           expect(convertedEntity).to.deep.equal({
             applications: ['toto'],
-            changelogDate: '20200101000100',
+            changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
             clientRootFolder: '',
             dto: 'no',
             embedded: false,
@@ -430,7 +431,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
         it('should prevent the entities from being searched', () => {
           expect(convertedEntity).to.deep.equal({
             applications: ['toto'],
-            changelogDate: '20200101000100',
+            changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
             clientRootFolder: '',
             dto: 'no',
             embedded: false,
@@ -486,7 +487,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           it('should convert them', () => {
             expect(convertedEntity).to.deep.equal({
               applications: ['toto'],
-              changelogDate: '20200101000100',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -559,7 +560,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           it('should convert them', () => {
             expect(convertedEntity).to.deep.equal({
               applications: ['toto'],
-              changelogDate: '20200101000100',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -630,7 +631,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           it('should convert them', () => {
             expect(convertedEntity).to.deep.equal({
               applications: ['toto'],
-              changelogDate: '20200101000100',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -686,7 +687,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           it('should convert them', () => {
             expect(convertedEntity).to.deep.equal({
               applications: ['toto'],
-              changelogDate: '20200101000100',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -797,7 +798,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           it('should convert them', () => {
             expect(convertedEntity).to.deep.equal({
               applications: ['toto'],
-              changelogDate: '20200101000100',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -874,7 +875,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           it('should convert them', () => {
             expect(convertedEntity).to.deep.equal({
               applications: ['toto'],
-              changelogDate: '20200101000100',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -1743,7 +1744,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           expect(convertedEntitiesForTataApplication).to.deep.equal([
             {
               applications: ['tata'],
-              changelogDate: '20200101000100',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 1 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -1760,7 +1761,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
             },
             {
               applications: ['tata'],
-              changelogDate: '20200101000200',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 2 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -1777,7 +1778,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
             },
             {
               applications: ['tata', 'tutu'],
-              changelogDate: '20200101000300',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 3 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -1796,7 +1797,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
           expect(convertedEntitiesForTutuApplication).to.deep.equal([
             {
               applications: ['tata', 'tutu'],
-              changelogDate: '20200101000300',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 3 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
@@ -1813,7 +1814,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
             },
             {
               applications: ['tutu'],
-              changelogDate: '20200101000400',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 4 }),
               clientRootFolder: '',
               dto: 'mapstruct',
               embedded: false,
@@ -1830,7 +1831,7 @@ describe('JDLWithApplicationsToJSONConverter', () => {
             },
             {
               applications: ['tutu'],
-              changelogDate: '20200101000500',
+              changelogDate: formatDateForLiquibase({ date: new Date(2020, 0, 1, 1, 0, 0), increment: 5 }),
               clientRootFolder: '',
               dto: 'no',
               embedded: false,
