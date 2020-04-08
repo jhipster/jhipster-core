@@ -18,12 +18,7 @@
  */
 
 /* eslint-disable no-new, no-unused-expressions */
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
-
-chai.use(sinonChai);
-const { expect } = chai;
+const { expect } = require('chai');
 
 const ApplicationValidator = require('../../../lib/validators/application_validator');
 
@@ -43,7 +38,6 @@ const BinaryOptions = require('../../../lib/core/jhipster/binary_options');
 const JDLApplication = require('../../../lib/core/jdl_application');
 const JDLUnaryOption = require('../../../lib/core/jdl_unary_option');
 const JDLBinaryOption = require('../../../lib/core/jdl_binary_option');
-const logger = require('../../../lib/utils/objects/logger');
 
 describe('ApplicationValidator', () => {
   let validator;
@@ -241,9 +235,7 @@ describe('ApplicationValidator', () => {
                     }
                   })
                 );
-              }).to.throw(
-                /^Only 'h2Memory', 'h2Disk', 'postgresql' are allowed as devDatabaseType values for databaseType 'sql'\.$/
-              );
+              }).to.throw(/Only 'h2Memory', 'h2Disk', 'postgresql' are allowed as devDatabaseType values\.$/);
             });
           });
           context('with both devDatabaseType and prodDatabaseType as invalid values', () => {
@@ -326,22 +318,6 @@ describe('ApplicationValidator', () => {
               });
             });
           });
-        });
-      });
-      context('with unknown options', () => {
-        let loggerDebug;
-        before(() => {
-          loggerDebug = sinon.spy(logger, 'debug');
-          new JDLApplication({ config: { ...basicValidApplicationConfig, toto: 42 } });
-        });
-        after(() => {
-          loggerDebug.restore();
-        });
-        it('it should send a debug message', () => {
-          expect(loggerDebug).to.have.been.calledOnce;
-          expect(loggerDebug.getCall(0).args[0]).to.equal(
-            'Unrecognized application option name and value: toto and 42'
-          );
         });
       });
       context('with unknown values', () => {

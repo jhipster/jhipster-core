@@ -17,7 +17,9 @@
  * limitations under the License.
  */
 
+/* eslint-disable no-unused-expressions */
 const { expect } = require('chai');
+
 const JDLApplicationConfiguration = require('../../../lib/core/jdl_application_configuration');
 const StringJDLApplicationConfigurationOption = require('../../../lib/core/string_jdl_application_configuration_option');
 const IntegerJDLApplicationConfigurationOption = require('../../../lib/core/integer_jdl_application_configuration_option');
@@ -109,6 +111,17 @@ describe('JDLApplicationConfigurationFactory', () => {
 
         it('should create it', () => {
           expect(createdConfiguration).to.deep.equal(expectedConfiguration);
+        });
+      });
+      context('containing an unknown configuration', () => {
+        let config;
+
+        before(() => {
+          config = createApplicationConfigurationFromObject({ toto: 42 });
+        });
+        it('should add the generic field', () => {
+          expect(config.options.toto).to.be.an('object');
+          expect(config.options.toto.name).to.equal('toto');
         });
       });
     });

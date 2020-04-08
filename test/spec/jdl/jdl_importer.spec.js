@@ -1865,5 +1865,178 @@ paginate * with infinite-scroll
         expect(fse.existsSync('.jhipster')).to.be.false;
       });
     });
+    context('when not providing custom definitions', () => {
+      context('and parsing JDL applications with config value not matching the custom definitions', () => {
+        let importer;
+
+        before(() => {
+          importer = createImporterFromContent(
+            `application {
+    config {
+      applicationType monolith
+      skipClient true
+      entitySuffix test
+      baseName tata
+      clientFramework ionic
+    }
+    entities A
+  }
+
+  @blueprintOption(123)
+  entity A
+
+  paginate * with infinite-scroll
+  `,
+            {
+              creationTimestamp: new Date(2020, 0, 1, 1, 0, 0),
+              generatorVersion: '7.0.0',
+              skipYoRcGeneration: true,
+              skipEntityFilesGeneration: true
+            }
+          );
+        });
+
+        it('should throw an error', () => {
+          expect(importer.import).to.throw(/^Unknown option value 'ionic' for option 'clientFramework'\.$/);
+        });
+      });
+
+      context('and parsing JDL applications with config not matching the custom definition', () => {
+        let importer;
+
+        before(() => {
+          importer = createImporterFromContent(
+            `application {
+    config {
+      applicationType monolith
+      skipClient true
+      entitySuffix test
+      test:test ABC
+      baseName tata
+    }
+    entities A
+  }
+
+  @blueprintOption(123)
+  entity A
+
+  paginate * with infinite-scroll
+  `,
+            {
+              creationTimestamp: new Date(2020, 0, 1, 1, 0, 0),
+              generatorVersion: '7.0.0',
+              skipYoRcGeneration: true,
+              skipEntityFilesGeneration: true
+            }
+          );
+        });
+
+        it('should throw an error', () => {
+          expect(() => importer.import()).to.throw(/^Unknown application option 'test:test'\.$/);
+        });
+      });
+    });
+
+    context('when providing custom definitions', () => {
+      context('and parsing JDL applications with value matching custom definitions', () => {
+        let returned;
+
+        before(() => {
+          const importer = createImporterFromContent(
+            `application {
+    config {
+      applicationType monolith
+      baseName tata
+      clientFramework ionic
+    }
+    entities A
+  }
+
+  entity A
+
+  paginate * with infinite-scroll
+  `,
+            {
+              creationTimestamp: new Date(2020, 0, 1, 1, 0, 0),
+              generatorVersion: '7.0.0',
+              skipYoRcGeneration: true,
+              skipEntityFilesGeneration: true
+            }
+          );
+          returned = importer.import(() => {
+            return {
+              applicationOptions: {
+                clientFramework: {
+                  values: {
+                    ionic: 'ionic'
+                  }
+                }
+              }
+            };
+          });
+        });
+
+        it('returns the import state', () => {
+          expect(returned.exportedApplications).to.have.lengthOf(1);
+          expect(returned.exportedApplications[0]['generator-jhipster'].clientFramework).to.be.equal('ionic');
+        });
+      });
+
+      context('and parsing JDL applications with config matching custom definitions', () => {
+        let returned;
+
+        before(() => {
+          const importer = createImporterFromContent(
+            `application {
+    config {
+      applicationType monolith
+      skipClient true
+      entitySuffix test
+      test:test ABC
+      baseName tata
+    }
+    entities A
+  }
+
+  @blueprintOption(123)
+  entity A
+
+  paginate * with infinite-scroll
+  `,
+            {
+              creationTimestamp: new Date(2020, 0, 1, 1, 0, 0),
+              generatorVersion: '7.0.0',
+              skipYoRcGeneration: true,
+              skipEntityFilesGeneration: true
+            }
+          );
+          returned = importer.import(() => {
+            return {
+              applicationOptions: {
+                'test:test': {
+                  type: 'string',
+                  values: {
+                    ABC: 'abc'
+                  }
+                }
+              }
+            };
+          });
+        });
+
+        it('returns the import state', () => {
+          expect(returned.exportedApplications).to.have.lengthOf(1);
+          expect(returned.exportedEntities).to.have.lengthOf(1);
+        });
+
+        it('exports the custom application config', () => {
+          expect(returned.exportedApplications[0]['generator-jhipster']['test:test']).to.be.equal('ABC');
+        });
+
+        it('exports the custom entity config', () => {
+          expect(returned.exportedEntities[0].blueprintOption).to.be.equal('123');
+        });
+      });
+    });
   });
 });

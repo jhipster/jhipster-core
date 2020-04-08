@@ -19,8 +19,8 @@
 /* eslint-disable no-unused-expressions */
 
 const { expect } = require('chai');
+const JCoreDefinitions = require('../../../../lib/core/jhipster');
 const {
-  isSql,
   CASSANDRA,
   COUCHBASE,
   MARIADB,
@@ -34,17 +34,19 @@ const {
 } = require('../../../../lib/core/jhipster/database_types');
 
 describe('DatabaseTypes', () => {
-  describe('isSql', () => {
+  const builtInDefinitions = new JCoreDefinitions();
+
+  describe('databaseIsSql', () => {
     context('when not passing anything', () => {
       it('should return false', () => {
-        expect(isSql()).to.be.false;
+        expect(builtInDefinitions.databaseIsSql()).to.be.false;
       });
     });
     context('when passing a SQL database type', () => {
       [SQL, MYSQL, POSTGRESQL, ORACLE, MARIADB, MSSQL].forEach(databaseType => {
         context(`such as ${databaseType}`, () => {
           it('should return true', () => {
-            expect(isSql(databaseType)).to.be.true;
+            expect(builtInDefinitions.databaseIsSql(databaseType)).to.be.true;
           });
         });
       });
@@ -53,7 +55,7 @@ describe('DatabaseTypes', () => {
       [MONGODB, CASSANDRA, COUCHBASE, NO].forEach(databaseType => {
         context(`such as ${databaseType}`, () => {
           it('should return false', () => {
-            expect(isSql(databaseType)).to.be.false;
+            expect(builtInDefinitions.databaseIsSql(databaseType)).to.be.false;
           });
         });
       });
