@@ -271,6 +271,71 @@ application {
         });
       });
     });
+    context('when having languages option (permissive option)', () => {
+      context('using value with unquoted', () => {
+        ['!', '#', '$', '%', '^', '&'].forEach(char => {
+          context(char, () => {
+            it('should throw', () => {
+              expect(() =>
+                parseFromContent(`application {
+  config {
+    jwtSecretKey b${char}e
+  }
+}`)
+              ).to.throw(/unexpected character: ->.<-/);
+            });
+          });
+        });
+
+        ['*', '@', '='].forEach(char => {
+          context(char, () => {
+            it('should throw', () => {
+              expect(() =>
+                parseFromContent(`application {
+  config {
+    jwtSecretKey b${char}e
+  }
+}`)
+              ).to.throw(/^MismatchedTokenException: Expecting/);
+            });
+          });
+        });
+        context('-', () => {
+          const char = '-';
+          let application;
+
+          before(() => {
+            const content = parseFromContent(`application {
+                config {
+                nativeLanguage b${char}e
+                }
+            }`);
+            application = content.applications[0];
+          });
+
+          it('should be parsed', () => {
+            expect(application.config.nativeLanguage).to.be.equal(`b${char}e`);
+          });
+        });
+        context('_', () => {
+          const char = '_';
+          let application;
+
+          before(() => {
+            const content = parseFromContent(`application {
+                config {
+                packageName b${char}e
+                }
+            }`);
+            application = content.applications[0];
+          });
+
+          it('should be parsed', () => {
+            expect(application.config.packageName).to.be.equal(`b${char}e`);
+          });
+        });
+      });
+    });
   });
   context('when parsing an entity', () => {
     context('with a name', () => {
