@@ -21,7 +21,6 @@
 const { expect } = require('chai');
 const JDLApplicationConfiguration = require('../../../lib/core/jdl_application_configuration');
 const StringJDLApplicationConfigurationOption = require('../../../lib/core/string_jdl_application_configuration_option');
-const ListJDLApplicationConfigurationOption = require('../../../lib/core/list_jdl_application_configuration_option');
 const { OptionNames } = require('../../../lib/core/jhipster/application_options');
 
 describe('JDLApplicationConfiguration', () => {
