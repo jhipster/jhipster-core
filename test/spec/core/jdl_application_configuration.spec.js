@@ -299,18 +299,6 @@ jhiPrefix prefix
         });
       });
     });
-    context('when the configuration has the blueprints option', () => {
-      let configuration;
-
-      before(() => {
-        configuration = new JDLApplicationConfiguration();
-        configuration.setOption(new ListJDLApplicationConfigurationOption(OptionNames.BLUEPRINTS, []));
-      });
-
-      it('should not stringify it', () => {
-        expect(configuration.toString()).not.to.include('blueprints');
-      });
-    });
     context('when the configuration has the package folder option', () => {
       let configuration;
 
