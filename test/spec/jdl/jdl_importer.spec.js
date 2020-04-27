@@ -1886,7 +1886,7 @@ paginate * with infinite-scroll
               applicationType: 'monolith',
               authenticationType: 'jwt',
               baseName: 'appWithBlueprints',
-              blueprints: ['generator-jhipster-vuejs', 'generator-jhipster-dotnetcore'],
+              blueprints: [{ name: 'generator-jhipster-vuejs' }, { name: 'generator-jhipster-dotnetcore' }],
               buildTool: 'maven',
               cacheProvider: 'ehcache',
               clientFramework: 'angularX',
