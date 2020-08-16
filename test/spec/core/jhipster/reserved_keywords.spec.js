@@ -70,6 +70,20 @@ describe('ReservedKeywords', () => {
       });
     });
   });
+  describe('isReservedJavaPackageName', () => {
+    context('when passing a valid package name', () => {
+      it('should return false', () => {
+        expect(ReservedKeywords.isReservedJavaPackageName('com.example.app')).to.be.false;
+        expect(ReservedKeywords.isReservedJavaPackageName('com')).to.be.false;
+      });
+    });
+    context('when passing a package name that uses reserved keywords', () => {
+      it('should return true', () => {
+        expect(ReservedKeywords.isReservedJavaPackageName('com.import')).to.be.true;
+        expect(ReservedKeywords.isReservedJavaPackageName('int')).to.be.true;
+      });
+    });
+  });
   describe('isReservedFieldName', () => {
     context('when passing a valid field name', () => {
       it('should return false', () => {
